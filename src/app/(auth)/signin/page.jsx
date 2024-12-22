@@ -58,7 +58,7 @@ const PageLogin = () => {
       toast.success("Login berhasil.");
 
       if (role === "admin" || role === "pegawai") {
-        router.push("/dashboard-order/ home");
+        router.push("/dashboard-order/home");
       } else if (role === "adminhome") {
         router.push("/dashboard-home/menu");
       } else {
