@@ -4,15 +4,6 @@ import React, { useState } from "react";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
 import axios from "axios";
 import { toast } from "sonner";
 
@@ -129,54 +120,49 @@ const Reservasi = () => {
 									/>
 								</div>
 								<div className="flex gap-4 w-full">
-									<Popover>
-										<PopoverTrigger asChild>
-											<Button
-												variant={"outline"}
-												className={cn(
-													"w-full h-[60px] justify-start text-left font-normal rounded-sm text-base",
-													!date && "text-muted-foreground"
-												)}
-											>
-												<CalendarIcon className="mr-2 h-4 w-4" />
-												{date ? (
-													format(date, "PPP")
-												) : (
-													<span>Pilih Tanggal</span>
-												)}
-											</Button>
-										</PopoverTrigger>
-										<PopoverContent className="w-auto p-0">
-											<Calendar
-												mode="single"
-												selected={date}
-												onSelect={setDate}
-												initialFocus
-											/>
-										</PopoverContent>
-									</Popover>
 									<Input
-										type="number"
-										className="bg-white text-black text-base rounded-sm h-[60px]"
-										placeholder="Jumlah Orang"
-										value={people}
-										onChange={(e) => setPeople(e.target.value)}
+										type="datetime-local"
+										className="bg-white text-black text-base rounded-sm h-[60px] w-full"
 									/>
+									<Select value={people} onValueChange={setPeople}>
+										<SelectTrigger className="w-full h-[60px] bg-white text-base rounded-sm placeholder:text-muted-foreground">
+											<SelectValue
+												placeholder="Jumlah Orang"
+												className="text-base placeholder:text-muted-foreground"
+											/>
+										</SelectTrigger>
+										<SelectContent>
+											<SelectGroup>
+												{Array.from({ length: 35 }, (_, i) => (
+													<SelectItem
+														key={i + 1}
+														value={`${i + 1} Orang`}
+														className="text-black"
+													>
+														{`${i + 1} Orang`}
+													</SelectItem>
+												))}
+											</SelectGroup>
+										</SelectContent>
+									</Select>
 								</div>
 								<Select value={ruangan} onValueChange={setRuangan}>
-									<SelectTrigger className="w-full h-[60px] bg-white text-base rounded-sm">
-										<SelectValue placeholder="Ruangan" />
+									<SelectTrigger className="w-full h-[60px] bg-white text-base rounded-sm placeholder:text-muted-foreground">
+										<SelectValue
+											placeholder="Ruangan"
+											className="placeholder:text-muted-foreground"
+										/>
 									</SelectTrigger>
 									<SelectContent>
 										<SelectGroup>
-											<SelectItem value="Lantai 1 Family Place">
-												Lantai 1 Family Place
+											<SelectItem value="Lantai 1 Utama">
+												Lantai 1 Utama
 											</SelectItem>
 											<SelectItem value="Lantai 2 Karaoke">
 												Lantai 2 Karaoke
 											</SelectItem>
-											<SelectItem value="Lantai 3 Rooftop">
-												Lantai 3 Rooftop
+											<SelectItem value="Lantai 3 Arena">
+												Lantai 3 Arena
 											</SelectItem>
 										</SelectGroup>
 									</SelectContent>

@@ -13,7 +13,7 @@ const Layanan = () => {
 					<h1 className="text-4xl md:text-5xl font-bold">Layanan Kami</h1>
 				</div>
 
-				<div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10 px-6 md:px-0">
+				<div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-10 px-6 md:px-0">
 					<Card className="rounded-md">
 						<div className="flex flex-col items-center justify-center  w-full h-[300px] gap-2 p-4 text-center">
 							<LuChefHat className="text-5xl text-headingText" />
@@ -31,16 +31,6 @@ const Layanan = () => {
 							<p className="text-base text-gray-500">
 								Makanan berkualitas menggunakan bahan terbaik, disiapkan dengan
 								keahlian, dan cita rasa sempurna
-							</p>
-						</div>
-					</Card>
-					<Card className="rounded-md">
-						<div className="flex flex-col items-center justify-center  w-full h-[300px] gap-2 p-4 text-center">
-							<LuQrCode className="text-5xl text-headingText" />
-							<h4 className="font-bold text-xl">Order via QR</h4>
-							<p className="text-base text-gray-500">
-								Pesan mudah dan cepat melalui QR code di meja, tanpa perlu
-								menunggu pelayan.
 							</p>
 						</div>
 					</Card>

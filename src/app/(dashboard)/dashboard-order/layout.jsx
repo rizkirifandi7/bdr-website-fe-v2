@@ -20,7 +20,11 @@ const LayoutAdmin = ({ children }) => {
 			<Toaster position="top-center" />
 			<SidebarProvider>
 				<SidebarDashboard data={OrderNavData} header={<DashboardHeaderOrder />}>
-					<div className="flex flex-1 flex-col gap-4 p-4"><CartProvider>{children}</CartProvider></div>
+					<div className="p-4">
+						<CartProvider>
+							{children}
+						</CartProvider>
+					</div>
 				</SidebarDashboard>
 			</SidebarProvider>
 		</>

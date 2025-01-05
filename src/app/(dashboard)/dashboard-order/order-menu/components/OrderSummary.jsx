@@ -1,10 +1,11 @@
 import { formatRupiah } from "@/lib/formatRupiah";
+import React from "react";
 
 const OrderSummary = ({ totalPrice, total, discount, tax }) => {
 	return (
-		<div className="bg-white m-4">
-			<div className="p-4 border rounded-lg">
-				<h1 className="font-semibold text-lg mb-2">Payment Details</h1>
+		<div className="bg-white">
+			<div className="p-4 border-b">
+				<h1 className="font-semibold text-base mb-2">Payment Details</h1>
 				<div className="flex flex-col gap-2">
 					<div className="flex justify-between items-center gap-2">
 						<p className="text-base">Subtotal</p>

@@ -1,11 +1,18 @@
-/* eslint-disable react/prop-types */
-import { Button } from "@/components/ui/button";
+import React from "react";
+import { useState, useEffect, useCallback } from "react";
+import { toast } from "sonner";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
+	Dialog,
 	DialogContent,
 	DialogDescription,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
+	DialogTrigger,
 } from "@/components/ui/dialog";
 import {
 	Form,
@@ -15,8 +22,6 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
 	Select,
 	SelectContent,
@@ -24,13 +29,11 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
-import { useState, useEffect, useCallback } from "react";
-import { useForm } from "react-hook-form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { MdOutlineEdit } from "react-icons/md";
-import { toast } from "sonner";
-import { z } from "zod";
+
 
 const FormSchema = z.object({
 	nama_menu: z.string().nonempty("Nama harus diisi."),
@@ -44,6 +47,7 @@ const FormSchema = z.object({
 const UpdateMenu = ({ fetchDataMenu, id, rowData }) => {
 	const [openTambah, setOpenTambah] = useState(false);
 	const [dataKategori, setDataKategori] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const fetchDataKategori = useCallback(async () => {
 		const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/kategori`);
@@ -68,6 +72,7 @@ const UpdateMenu = ({ fetchDataMenu, id, rowData }) => {
 	});
 
 	const handleUpdate = async (data) => {
+		setIsLoading(true);
 		try {
 			const formData = new FormData();
 			formData.append("nama_menu", data.nama_menu);
@@ -94,6 +99,8 @@ const UpdateMenu = ({ fetchDataMenu, id, rowData }) => {
 		} catch (error) {
 			console.error("Error adding menu:", error);
 			toast.error("Gagal menambahkan menu");
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -240,8 +247,8 @@ const UpdateMenu = ({ fetchDataMenu, id, rowData }) => {
 							/>
 						</div>
 						<DialogFooter>
-							<Button type="submit" className="w-full mt-2">
-								Submit
+							<Button type="submit" className="w-full mt-2" disabled={isLoading}>
+								{isLoading ? "Loading..." : "Update"}
 							</Button>
 						</DialogFooter>
 					</form>

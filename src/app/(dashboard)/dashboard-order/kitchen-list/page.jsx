@@ -1,43 +1,105 @@
 "use client";
 
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import axios from "axios";
 import { toast } from "sonner";
 
+const OrderCard = ({ item, onUpdate }) => (
+	<Card key={item.id} className="max-w-xs w-full flex-shrink-0">
+		<div className="flex justify-between items-center p-4 border-b">
+			<div>
+				<h1 className="text-base font-semibold">{item.nama_pelanggan}</h1>
+				<p className="text-sm">
+					{new Date(item.order_time).toLocaleDateString("id-ID", {
+						day: "numeric",
+						month: "short",
+						year: "numeric",
+					})}
+					,{" "}
+					{new Date(item.order_time).toLocaleTimeString("id-ID", {
+						hour: "2-digit",
+						minute: "2-digit",
+					})}
+				</p>
+			</div>
+			<div className="text-end">
+				<h1 className="text-base font-semibold">Order #{item.id}</h1>
+				<p className="text-sm">{item.mode}</p>
+			</div>
+		</div>
+		<div className="p-4">
+			{item.item_pesanan.map((subItem) => (
+				<div className="flex justify-between items-center" key={subItem.id}>
+					<p className="text-sm">{subItem.menu.nama_menu}</p>
+					<p className="text-sm">x{subItem.jumlah}</p>
+				</div>
+			))}
+		</div>
+		<div className="p-4">
+			<h1 className="text-sm font-semibold">Catatan:</h1>
+			<p className="text-sm">{item.catatan || "-"}</p>
+		</div>
+		<div className="flex gap-x-4 justify-between items-center p-4 border-t">
+			{item.status === "preparing" && (
+				<>
+					<button
+						className="bg-green-500 text-white px-4 py-2 rounded-lg w-full"
+						onClick={() => onUpdate(item.id, "completed")}
+					>
+						Completed
+					</button>
+					<button
+						className="bg-red-500 text-white px-4 py-2 rounded-lg w-full"
+						onClick={() => onUpdate(item.id, "canceled")}
+					>
+						Cancel
+					</button>
+				</>
+			)}
+		</div>
+	</Card>
+);
+
 const PageKitchenList = () => {
-	const [data, setData] = React.useState([]);
+	const [orders, setOrders] = useState({ preparing: [], completed: [] });
+	const [loading, setLoading] = useState(false);
 
-	const fetchDataPesanan = React.useCallback(async () => {
-		const response = await axios.get(
-			`${process.env.NEXT_PUBLIC_API_URL}/pesanan`
-		);
-
-		if (response.status !== 200) {
+	const fetchOrders = useCallback(async () => {
+		setLoading(true);
+		try {
+			const response = await axios.get(
+				`${process.env.NEXT_PUBLIC_API_URL}/pesanan`
+			);
+			if (response.status === 200) {
+				const groupedOrders = response.data.data.reduce(
+					(acc, order) => {
+						acc[order.status]?.push(order);
+						return acc;
+					},
+					{ preparing: [], completed: [] }
+				);
+				setOrders(groupedOrders);
+			} else {
+				toast.error("Failed to fetch data");
+			}
+		} catch (error) {
 			toast.error("Failed to fetch data");
-			return;
+		} finally {
+			setLoading(false);
 		}
-
-		const reversedData = response.data.data;
-		setData(reversedData);
 	}, []);
-
-	React.useEffect(() => {
-		fetchDataPesanan();
-	}, [fetchDataPesanan]);
 
 	const updateOrderStatus = async (id, status) => {
 		try {
 			const response = await axios.put(
 				`${process.env.NEXT_PUBLIC_API_URL}/pesanan/${id}`,
-				{
-					status: status,
-				}
+				{ status }
 			);
 
 			if (response.status === 200) {
-				setData((prevData) => prevData.filter((item) => item.id !== id));
 				toast.success("Order status updated successfully");
+				fetchOrders();
 			} else {
 				toast.error("Failed to update order status");
 			}
@@ -46,68 +108,37 @@ const PageKitchenList = () => {
 		}
 	};
 
-	const filteredData = data.filter((item) => item.status === "preparing");
+	useEffect(() => {
+		fetchOrders();
+	}, [fetchOrders]);
 
 	return (
 		<div>
 			<h1 className="text-2xl font-bold">Kitchen List Pesanan</h1>
-
-			<div className="grid grid-cols-4 gap-6 mt-10">
-				{filteredData.map((item) => (
-					<Card key={item.id}>
-						<div className="flex justify-between items-center p-4 border-b">
-							<div className="">
-								<h1 className="text-lg font-semibold">{item.nama_pelanggan}</h1>
-								<p className="text-sm">
-									{new Date(item.order_time).toLocaleDateString("id-ID", {
-										day: "numeric",
-										month: "short",
-										year: "numeric",
-									})}
-									,
-									{new Date(item.order_time).toLocaleTimeString("id-ID", {
-										hour: "2-digit",
-										minute: "2-digit",
-									})}
-								</p>
-							</div>
-							<div className="text-end">
-								<h1 className="text-lg font-semibold">Order #{item.id}</h1>
-								<p className="text-sm">{item.mode}</p>
+			{loading ? (
+				<div className="flex justify-center items-center h-screen">
+					<div className="loader"></div>
+				</div>
+			) : (
+				<>
+					{["preparing", "completed"].map((status) => (
+						<div key={status} className="flex flex-col gap-4 mt-6">
+							<h1 className="text-base font-semibold border p-2 rounded-md text-center">
+								{status.charAt(0).toUpperCase() + status.slice(1)}
+							</h1>
+							<div className="flex gap-4 w-full overflow-x-auto py-4">
+								{orders[status]?.map((item) => (
+									<OrderCard
+										key={item.id}
+										item={item}
+										onUpdate={updateOrderStatus}
+									/>
+								))}
 							</div>
 						</div>
-						<div className="p-4">
-							{item.item_pesanan.map((subItem) => (
-								<div
-									className="flex justify-between items-center"
-									key={subItem.id}
-								>
-									<p className="text-sm">{subItem.menu.nama_menu}</p>
-									<p className="text-sm">x{subItem.jumlah}</p>
-								</div>
-							))}
-						</div>
-						<div className="p-4">
-							<h1 className="text-base font-semibold">Catatan:</h1>
-							<p className="text-sm">{item.catatan}</p>
-						</div>
-						<div className="flex gap-x-4 justify-between items-center p-4 border-t">
-							<button
-								className="bg-green-500 text-white px-4 py-2 rounded-lg w-full"
-								onClick={() => updateOrderStatus(item.id, "completed")}
-							>
-								Completed
-							</button>
-							<button
-								className="bg-red-500 text-white px-4 py-2 rounded-lg w-full"
-								onClick={() => updateOrderStatus(item.id, "canceled")}
-							>
-								Cancel
-							</button>
-						</div>
-					</Card>
-				))}
-			</div>
+					))}
+				</>
+			)}
 		</div>
 	);
 };

@@ -19,18 +19,24 @@ const PageHomeDashboard = () => {
 	const [loading, setLoading] = React.useState(true);
 	const [error, setError] = React.useState(null);
 
-	const calculatePercentageChange = React.useCallback((data) => {
+	const calculatePercentageChange = React.useCallback((ordersData) => {
 		const currentMonth = new Date().getMonth();
 		const previousMonth = currentMonth === 0 ? 11 : currentMonth - 1;
 
 		const getMonthlyData = (month) =>
-			data.filter((order) => new Date(order.order_time).getMonth() === month);
+			ordersData.filter(
+				(order) => new Date(order.order_time).getMonth() === month
+			);
 
 		const currentMonthData = getMonthlyData(currentMonth);
 		const previousMonthData = getMonthlyData(previousMonth);
 
 		const calculateChange = (current, previous) =>
-			previous === 0 ? 0 : ((current - previous) / previous) * 100;
+			previous === 0
+				? current > 0
+					? 100
+					: 0
+				: ((current - previous) / previous) * 100;
 
 		setPercentageChange({
 			orders: calculateChange(
@@ -38,8 +44,8 @@ const PageHomeDashboard = () => {
 				previousMonthData.length
 			),
 			revenue: calculateChange(
-				currentMonthData.reduce((acc, order) => acc + order.total, 0),
-				previousMonthData.reduce((acc, order) => acc + order.total, 0)
+				currentMonthData.reduce((acc, order) => acc + Number(order.total), 0),
+				previousMonthData.reduce((acc, order) => acc + Number(order.total), 0)
 			),
 			activeTables: calculateChange(
 				new Set(currentMonthData.map((order) => order.id_meja)).size,
@@ -49,7 +55,8 @@ const PageHomeDashboard = () => {
 	}, []);
 
 	const totalRevenue = React.useMemo(
-		() => data.infoDataPesanan.reduce((acc, order) => acc + order.total, 0),
+		() =>
+			data.infoDataPesanan.reduce((acc, order) => acc + Number(order.total), 0),
 		[data.infoDataPesanan]
 	);
 
@@ -64,27 +71,33 @@ const PageHomeDashboard = () => {
 					orderDate.getFullYear() === today.getFullYear()
 				);
 			})
-			.reduce((acc, order) => acc + order.total, 0);
+			.reduce((acc, order) => acc + Number(order.total), 0);
 	}, [data.infoDataPesanan]);
 
 	const totalReservations = data.menuData.length;
 
 	React.useEffect(() => {
 		const fetchData = async () => {
+			setLoading(true);
+			setError(null);
 			try {
 				const [pesananResponse, menuResponse] = await Promise.all([
 					fetch(`${process.env.NEXT_PUBLIC_API_URL}/pesanan`),
 					fetch(`${process.env.NEXT_PUBLIC_API_URL}/menu`),
 				]);
 
+				if (!pesananResponse.ok || !menuResponse.ok) {
+					throw new Error("Failed to fetch data");
+				}
+
 				const pesananData = await pesananResponse.json();
 				const menuData = await menuResponse.json();
 
 				setData({
-					infoDataPesanan: pesananData.data,
-					menuData: menuData.data,
+					infoDataPesanan: pesananData.data || [],
+					menuData: menuData.data || [],
 				});
-				calculatePercentageChange(pesananData.data);
+				calculatePercentageChange(pesananData.data || []);
 			} catch (err) {
 				setError(err.message);
 			} finally {
@@ -123,7 +136,7 @@ const PageHomeDashboard = () => {
 					value={formatRupiah(totalRevenueToday)}
 				/>
 			</div>
-			<div className="grid auto-rows-min gap-4 md:grid-cols-2">
+			<div className="grid auto-rows-min gap-4 md:grid-cols-2 mt-4">
 				<ChartInfo orders={data.infoDataPesanan} />
 				<BarInfo orders={data.infoDataPesanan} />
 			</div>

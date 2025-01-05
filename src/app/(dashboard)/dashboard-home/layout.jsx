@@ -1,3 +1,4 @@
+import React from "react";
 import { Toaster } from "sonner";
 import { HomeNavData } from "@/constant/sidebarData";
 import { SidebarProvider } from "@/components/ui/sidebar";

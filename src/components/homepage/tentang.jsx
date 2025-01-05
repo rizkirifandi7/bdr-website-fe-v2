@@ -7,7 +7,7 @@ const Tentang = () => {
 			<div className="max-w-screen-xl mx-auto">
 				<div className="flex gap-4 md:gap-0 flex-col-reverse md:flex-row md:justify-between items-center p-4">
 					<div className="md:w-1/2 mt-4 md:mt-0">
-						<Image src="/asset-room.png" alt="hero" width={500} height={500} />
+						<Image src="/asset-room.png" alt="hero" width={500} height={500} className="w-auto h-auto"/>
 					</div>
 					<div className="flex flex-col md:w-1/2">
 						<p className="text-xl font-medium text-headingText font-custom">

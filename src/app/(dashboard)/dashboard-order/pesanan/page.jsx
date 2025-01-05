@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-target-blank */
 "use client";
 
 import * as React from "react";
@@ -14,55 +15,68 @@ import Invoice from "./components/Invoice";
 import { BlobProvider } from "@react-pdf/renderer";
 import { ArrowUpDown } from "lucide-react";
 import TableView from "@/components/dashboard/table-view";
+import { formatDateTime } from "@/lib/formatDate";
 
 const PagePesanan = () => {
 	const [dataUser, setDataUser] = React.useState([]);
 
-	const RenderInvoice = ({ rowData }) => <Invoice rowData={rowData} />;
+	const fetchDataPesanan = React.useCallback(async () => {
+		try {
+			const response = await axios.get(
+				`${process.env.NEXT_PUBLIC_API_URL}/pesanan`
+			);
 
-	const columns = [
-		{
-			accessorKey: "nama_pelanggan",
-			header: "Nama Pelanggan",
-			cell: ({ row }) => <div>{row.getValue("nama_pelanggan")}</div>,
-		},
-		{
-			accessorKey: "tipe_payment",
-			header: "Payment",
-			cell: ({ row }) => <div>{row.getValue("tipe_payment")}</div>,
-		},
-		{
-			accessorKey: "mode",
-			header: "Tipe Order",
-			cell: ({ row }) => <div>{row.getValue("mode")}</div>,
-		},
-		{
-			accessorKey: "item_pesanan",
-			header: "Item Pesanan",
-			cell: ({ row }) => (
-				<div>
-					{row.original.item_pesanan.map((item, index) => (
+			if (response.status === 200) {
+				setDataUser(response.data.data.reverse());
+			} else {
+				toast.error("Failed to fetch data");
+			}
+		} catch (error) {
+			toast.error("Error fetching data. Please try again.");
+			console.error(error);
+		}
+	}, []);
+
+	React.useEffect(() => {
+		fetchDataPesanan();
+	}, [fetchDataPesanan]);
+
+	const columns = React.useMemo(
+		() => [
+			{
+				accessorKey: "nama_pelanggan",
+				header: "Nama Pelanggan",
+			},
+			{
+				accessorKey: "tipe_payment",
+				header: "Payment",
+			},
+			{
+				accessorKey: "mode",
+				header: "Tipe Order",
+			},
+			{
+				accessorKey: "item_pesanan",
+				header: "Item Pesanan",
+				cell: ({ row }) =>
+					row.original.item_pesanan.map((item, index) => (
 						<div key={index}>
 							{item.menu.nama_menu} - {item.jumlah} pcs
 						</div>
-					))}
-				</div>
-			),
-		},
-		{
-			accessorKey: "total",
-			header: "Total",
-			cell: ({ row }) => <div>{row.getValue("total")}</div>,
-		},
-		{
-			accessorKey: "status",
-			header: "Status",
-			cell: ({ row }) => <UpdatePesananStatus row={row} />,
-		},
-		{
-			accessorKey: "order_time",
-			header: ({ column }) => {
-				return (
+					)),
+			},
+			{
+				accessorKey: "total",
+				header: "Total",
+			},
+			{
+				accessorKey: "status",
+				header: "Status",
+				cell: ({ row }) => <UpdatePesananStatus row={row} />,
+			},
+			{
+				accessorKey: "order_time",
+				header: ({ column }) => (
 					<Button
 						variant="ghost"
 						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -70,78 +84,45 @@ const PagePesanan = () => {
 						Tanggal
 						<ArrowUpDown className="ml-2 h-4 w-4" />
 					</Button>
-				);
+				),
+				cell: ({ row }) => (
+					<div>{formatDateTime(row.getValue("order_time"))}</div>
+				),
 			},
-			cell: ({ row }) => (
-				<div className="capitalize">
-					{new Date(row.getValue("order_time")).toLocaleDateString("id-ID", {
-						day: "numeric",
-						month: "short",
-						year: "numeric",
-					})}
-					,
-					{new Date(row.getValue("order_time")).toLocaleTimeString("id-ID", {
-						hour: "2-digit",
-						minute: "2-digit",
-					})}
-				</div>
-			),
-		},
-
-		{
-			id: "actions",
-			enableHiding: false,
-			cell: ({ row }) => {
-				const id = row.original.id;
-				const rowData = row.original;
-
-				return (
-					<div className="flex items-center gap-2">
-						<DetailPesanan rowData={rowData} />
-						<HapusPesanan id={id} fetchDataPesanan={fetchDataPesanan} />
-						<Button variant="outline" size="icon">
-							<BlobProvider document={<RenderInvoice rowData={rowData} />}>
-								{({ url, blob }) => (
-									<a href={url} target="_blank">
-										<MdOutlineFileDownload />
-									</a>
-								)}
-							</BlobProvider>
-						</Button>
-					</div>
-				);
+			{
+				id: "actions",
+				enableHiding: false,
+				cell: ({ row }) => {
+					const { id, ...rowData } = row.original;
+					return (
+						<div className="flex items-center gap-2">
+							<DetailPesanan rowData={rowData} id={id}/>
+							<HapusPesanan id={id} fetchDataPesanan={fetchDataPesanan} />
+							<Button variant="outline" size="icon">
+								<BlobProvider document={<Invoice rowData={rowData} id={id}/>}>
+									{({ url }) => (
+										<a href={url} target="_blank">
+											<MdOutlineFileDownload />
+										</a>
+									)}
+								</BlobProvider>
+							</Button>
+						</div>
+					);
+				},
 			},
-		},
-	];
-
-	const fetchDataPesanan = React.useCallback(async () => {
-		const response = await axios.get(
-			`${process.env.NEXT_PUBLIC_API_URL}/pesanan`
-		);
-
-		if (response.status !== 200) {
-			toast.error("Failed to fetch data");
-			return;
-		}
-
-		const reversedData = response.data.data.reverse();
-		setDataUser(reversedData);
-	}, []);
-
-	React.useEffect(() => {
-		fetchDataPesanan();
-	}, [fetchDataPesanan]);
+		],
+		[fetchDataPesanan]
+	);
 
 	return (
-		<>
-			<TableView
-				columns={columns}
-				data={dataUser}
-				fetchData={fetchDataPesanan}
-				title="Dashboard Pesanan"
-				search="item_pesanan"
-			/>
-		</>
+		<TableView
+			columns={columns}
+			data={dataUser}
+			fetchData={fetchDataPesanan}
+			title="Dashboard Pesanan"
+			search="item_pesanan"
+		/>
 	);
 };
 

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -13,19 +13,17 @@ import { formatRupiah } from "@/lib/formatRupiah";
 import Image from "next/image";
 import React from "react";
 
-const DetailPesanan = ({ rowData }) => {
+const DetailPesanan = ({ rowData, id }) => {
 	const [openDetail, setOpenDetail] = React.useState(false);
-	const [selectedRowData, setSelectedRowData] = React.useState(null);
+
+	console.log(rowData);
 
 	return (
-		<div className="">
+		<>
 			<Dialog
 				open={openDetail}
 				onOpenChange={(isOpen) => {
 					setOpenDetail(isOpen);
-					if (isOpen) {
-						setSelectedRowData(rowData);
-					}
 				}}
 			>
 				<DialogTrigger asChild>
@@ -33,51 +31,45 @@ const DetailPesanan = ({ rowData }) => {
 						Lihat Detail
 					</Button>
 				</DialogTrigger>
-				{selectedRowData && (
+				{rowData && (
 					<DialogContent className="sm:max-w-[485px]">
 						<DialogHeader>
 							<DialogTitle>Detail Pesanan</DialogTitle>
 							<DialogDescription>
-								Detail pesanan untuk ID {selectedRowData.id}
+								Detail pesanan untuk ID {id}
 							</DialogDescription>
 						</DialogHeader>
 						<div className="flex flex-col gap-4 h-[500px] overflow-y-auto scrollbar-hide">
 							<div className="flex justify-between items-center bg-orange-50 border border-headingText px-4 py-2 rounded-lg">
 								<p className="text-sm">Tipe Order</p>
 								<p className="border border-headingText py-1 px-2 bg-white rounded-lg text-xs">
-									{selectedRowData.mode}
+									{rowData.mode}
 								</p>
 							</div>
 							<div className="flex justify-between items-center border rounded-lg p-4">
 								<div className="text-start">
 									<p className="text-sm text-gray-500">Order ID</p>
-									<p className="text-sm font-semibold">#{selectedRowData.id}</p>
+									<p className="text-sm font-semibold">#{id}</p>
 								</div>
 								<div className=" text-end">
 									<p className="text-sm text-gray-500">Tanggal</p>
 									<p className="text-sm font-semibold">
-										{new Date(selectedRowData.order_time).toLocaleDateString(
-											"id-ID",
-											{
-												day: "numeric",
-												month: "short",
-												year: "numeric",
-											}
-										)}
+										{new Date(rowData.order_time).toLocaleDateString("id-ID", {
+											day: "numeric",
+											month: "short",
+											year: "numeric",
+										})}
 										,
-										{new Date(selectedRowData.order_time).toLocaleTimeString(
-											"id-ID",
-											{
-												hour: "2-digit",
-												minute: "2-digit",
-											}
-										)}
+										{new Date(rowData.order_time).toLocaleTimeString("id-ID", {
+											hour: "2-digit",
+											minute: "2-digit",
+										})}
 									</p>
 								</div>
 							</div>
 							<div className="border p-4 rounded-lg">
 								<h1>Order Item</h1>
-								{selectedRowData.item_pesanan.map((item, index) => (
+								{rowData.item_pesanan.map((item, index) => (
 									<div
 										key={index}
 										className="flex justify-between items-center gap-2"
@@ -112,7 +104,7 @@ const DetailPesanan = ({ rowData }) => {
 							</div>
 							<div className="border p-4 rounded-lg">
 								<h1 className="font-semibold">Catatan:</h1>
-								<p>{selectedRowData.catatan}</p>
+								<p>{rowData.catatan}</p>
 							</div>
 
 							<div className="p-4 border rounded-lg">
@@ -122,7 +114,7 @@ const DetailPesanan = ({ rowData }) => {
 										<p className="text-base">Subtotal</p>
 										<p className="text-base">
 											{formatRupiah(
-												selectedRowData.item_pesanan.reduce((acc, item) => {
+												rowData.item_pesanan.reduce((acc, item) => {
 													return acc + item.jumlah * item.menu.harga;
 												}, 0)
 											)}
@@ -131,16 +123,14 @@ const DetailPesanan = ({ rowData }) => {
 									<div className="flex justify-between items-center gap-2">
 										<p className="text-base">Discount</p>
 										<p className="text-base">
-											{formatRupiah(
-												selectedRowData.total - selectedRowData.total
-											)}
+											{formatRupiah(rowData.total - rowData.total)}
 										</p>
 									</div>
 									<div className="flex justify-between items-center gap-2">
 										<p className="text-base">Service Charge (5%)</p>
 										<p className="text-base">
 											{formatRupiah(
-												selectedRowData.item_pesanan.reduce((acc, item) => {
+												rowData.item_pesanan.reduce((acc, item) => {
 													return acc + item.jumlah * 0;
 												}, 0)
 											)}
@@ -149,7 +139,7 @@ const DetailPesanan = ({ rowData }) => {
 									<div className="flex justify-between items-center gap-2 mt-2 border-t">
 										<p className="text-base font-bold mt-4">Total</p>
 										<p className="font-bold text-base mt-4">
-											{formatRupiah(selectedRowData.total)}
+											{formatRupiah(rowData.total)}
 										</p>
 									</div>
 								</div>
@@ -167,7 +157,7 @@ const DetailPesanan = ({ rowData }) => {
 					</DialogContent>
 				)}
 			</Dialog>
-		</div>
+		</>
 	);
 };
 

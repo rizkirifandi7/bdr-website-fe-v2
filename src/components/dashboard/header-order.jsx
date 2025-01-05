@@ -26,7 +26,7 @@ const DashboardHeaderOrder = () => {
   const handleLogout = async () => {
     try {
       await removeCookie("auth_session");
-      router.push("/auth/signin");
+      router.push("/signin");
       toast.success("Logout berhasil.");
     } catch (error) {
       toast.error("Logout gagal.");

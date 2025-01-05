@@ -1,6 +1,10 @@
+import React from "react";
 import Footer from "@/components/homepage/footer";
 import Navbar from "@/components/homepage/navbar";
 import { Toaster } from "sonner";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import Image from "next/image";
 
 export const metadata = {
 	title: "Homepage | Bakso Dono Reborn",
@@ -12,11 +16,18 @@ export const metadata = {
 
 export default function HomeRoot({ children }) {
 	return (
-		<>
+		<div className="relative">
 			<Toaster position="top-center" />
 			<Navbar />
 			{children}
 			<Footer />
-		</>
+			<div className="fixed bottom-0 right-0 m-4">
+				<Button asChild size="icon" variant="outline">
+					<Link href={"https://wa.me/62895609977877"}>
+						<Image src={"/wa.ico"} width={32} height={32} alt="wa" />
+					</Link>
+				</Button>
+			</div>
+		</div>
 	);
 }

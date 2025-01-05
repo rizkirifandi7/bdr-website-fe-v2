@@ -1,7 +1,8 @@
 import Image from "next/image";
-import React from "react";
-import { CiFacebook, CiInstagram } from "react-icons/ci";
 import Link from "next/link";
+import React from "react";
+import { CiFacebook, CiInstagram, CiYoutube } from "react-icons/ci";
+import { PiTiktokLogo } from "react-icons/pi";
 
 const FooterLink = ({ href, children }) => (
 	<a href={href} className="hover:underline">
@@ -10,26 +11,26 @@ const FooterLink = ({ href, children }) => (
 );
 
 const FooterSection = ({ title, children }) => (
-	<div className="w-[250px]">
-		<h2 className="mb-6 text-2xl text-headingText font-custom">{title}</h2>
-		<div className="flex flex-col gap-4 text-white font-medium">{children}</div>
+	<div className="w-[200px]">
+		<h2 className="mb-6 text-xl text-headingText font-custom">{title}</h2>
+		<div className="flex flex-col gap-4 text-white text-sm">{children}</div>
 	</div>
 );
 
 const Footer = () => {
 	return (
 		<footer className="bg-[#0F172B] mt-20">
-			<div className="flex flex-col justify-between mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8 md:h-[400px] h-full">
+			<div className="flex flex-col justify-between mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8 md:h-[300px] h-full">
 				<div className="md:flex md:justify-between">
 					<div className="mb-6 md:mb-0">
-						<a href="#" className="flex gap-2 items-center">
+						<a href="#" className="flex gap-3 items-center">
 							<Image src="/logobdr.png" alt="Logo" width={40} height={40} />
-							<span className="self-center text-2xl font-semibold whitespace-nowrap text-headingText">
+							<span className="text-xl font-semibold whitespace-nowrap text-headingText">
 								Bakso Dono Reborn
 							</span>
 						</a>
 					</div>
-					<div className="grid grid-cols-1 md:gap-8 gap-6 md:grid-cols-3">
+					<div className="grid grid-cols-1 md:gap-8 gap-4 md:grid-cols-4 justify-end items-start">
 						<FooterSection title="Perusahaan">
 							<FooterLink href="/tentang">Tentang Kami</FooterLink>
 							<FooterLink href="/kontak">Kontak Kami</FooterLink>
@@ -47,38 +48,34 @@ const Footer = () => {
 							<p>Senin - Minggu</p>
 							<p>10.00 - 21.00 WIB</p>
 						</FooterSection>
-					</div>
-				</div>
-				<div className="sm:flex sm:items-center sm:justify-between border-t-2 pt-8 mt-10 md:mt-0 border-gray-700">
-					<span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
-						© 2024{" "}
-						<a href="#" className="hover:underline">
-							Bakso Dono Reborn
-						</a>
-						. All Rights Reserved.
-					</span>
-					<div className="flex mt-4 sm:justify-center sm:mt-0">
-						{[
-							{
-								href: "#",
-								icon: <CiFacebook />,
-								label: "Facebook page",
-							},
-							{
-								href: "#",
-								icon: <CiInstagram />,
-								label: "Discord community",
-							},
-						].map((social, index) => (
+						<FooterSection title="Ikuti Kami">
 							<Link
-								key={index}
-								href={social.href}
-								className="text-gray-500 text-2xl hover:text-headingText font-custom dark:hover:text-white ms-5"
+								href="facebook.com/baksodonoreborn"
+								className="flex items-center gap-2"
 							>
-								{social.icon}
-								<span className="sr-only">{social.label}</span>
+								<CiFacebook /> Facebook
 							</Link>
-						))}
+							<Link
+								href="instagram.com/baksodonoreborn/"
+								className="flex items-center gap-2"
+							>
+								<CiInstagram /> Instagram
+							</Link>
+							<Link
+								className="flex items-center gap-2"
+								href="youtube.com/channel/UCR7Garv3A8D2ED-kVix2nFg"
+							>
+								<CiYoutube />
+								Youtube
+							</Link>
+							<Link
+								className="flex items-center gap-2"
+								href="www.tiktok.com/@baksodonoreborn"
+							>
+								<PiTiktokLogo />
+								Tiktok
+							</Link>
+						</FooterSection>
 					</div>
 				</div>
 			</div>

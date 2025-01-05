@@ -8,12 +8,12 @@ const ItemMenu = ({ data }) => {
 	const { addToCart, removeFromCart } = useCart();
 
 	return (
-		<div className="flex justify-between items-center gap-2">
-			<div className="flex items-center gap-3 w-[300px] h-[120px]">
+		<div className="flex justify-between items-center border rounded-md p-2">
+			<div className="flex items-center gap-2 w-full h-[100px]">
 				<Image
 					src={data.gambar}
-					width={80}
-					height={80}
+					width={60}
+					height={60}
 					alt="menu"
 					className="rounded-md"
 				/>

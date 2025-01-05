@@ -37,9 +37,9 @@ const Jumbotron = () => {
 						<Image
 							src="/hero.png"
 							alt="hero"
-							width={600}
+							width={400}
 							height={400}
-							className="w-56 md:w-[600px] h-full animate-spin-slow"
+							className="w-[300px] h-[300px] md:w-auto md:h-auto animate-spin-slow"
 						/>
 					</div>
 				</div>

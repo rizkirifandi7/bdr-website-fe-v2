@@ -79,7 +79,7 @@ const DateTable = ({ date, table, type, nama }) => {
 		<View style={styles.dateTableParent}>
 			<View style={styles.dateTable}>
 				<Text>{nama}</Text>
-				<Text>Meja {table}</Text>
+				<Text> #{table}</Text>
 			</View>
 			<View style={styles.dateTable}>
 				<Text>
@@ -116,7 +116,7 @@ const TableCatatan = ({ rowData }) => (
 	</View>
 );
 
-const Invoice = ({ rowData }) => {
+const Invoice = ({ rowData, id }) => {
 	return (
 		<Document>
 			<Page size="A7" style={styles.page}>
@@ -126,7 +126,7 @@ const Invoice = ({ rowData }) => {
 				<DateTable
 					nama={rowData.nama_pelanggan}
 					date={rowData.order_time}
-					table={rowData.id_meja}
+					table={id}
 					type={rowData.mode}
 				/>
 				<Separator />

@@ -1,3 +1,4 @@
+import React from "react";
 const { FaStar } = require("react-icons/fa");
 
 const StarRating = ({ rating, setRating }) => {
@@ -12,7 +13,7 @@ const StarRating = ({ rating, setRating }) => {
 				return (
 					<FaStar
 						key={index}
-						size={40}
+						size={32}
 						className={value <= rating ? "text-yellow-500" : "text-gray-300"}
 						onClick={() => handleClick(value)}
 					/>

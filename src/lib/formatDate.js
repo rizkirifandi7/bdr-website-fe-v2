@@ -21,3 +21,12 @@ export function formatDateToISO(dateString) {
 	const day = String(date.getDate()).padStart(2, "0");
 	return `${year}-${month}-${day}`;
 }
+
+export const formatDateTime = (dateString) =>
+	new Date(dateString).toLocaleString("id-ID", {
+		day: "numeric",
+		month: "short",
+		year: "numeric",
+		hour: "2-digit",
+		minute: "2-digit",
+	});

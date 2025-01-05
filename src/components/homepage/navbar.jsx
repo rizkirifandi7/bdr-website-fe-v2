@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useState } from "react";
 import Image from "next/image";
 import { Menu } from "lucide-react";
@@ -15,15 +16,15 @@ import { Button } from "../ui/button";
 
 const NavLink = ({ link, activeLink, setActiveLink }) => {
 	return (
-		<ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border md:flex-row md:space-x-6 rtl:space-x-reverse md:mt-0 md:border-0 text-sm uppercase text-white">
+		<ul className="flex flex-col p-4 md:p-0 mt-4 border md:flex-row md:space-x-6 rtl:space-x-reverse md:mt-0 md:border-0 uppercase text-white">
 			{link.map((item, index) => (
 				<li key={index}>
 					<Link
 						href={item.url}
 						className={
 							activeLink === item.title
-								? `block py-2 px-3 rounded md:p-0 font-bold text-headingText`
-								: `block py-2 px-3 rounded md:p-0 hover:text-headingText`
+								? `block py-2 px-3 rounded md:p-0 font-bold text-headingText text-sm`
+								: `block py-2 px-3 rounded md:p-0 hover:text-headingText text-sm`
 						}
 						onClick={() => setActiveLink(item.title)}
 					>
@@ -36,7 +37,7 @@ const NavLink = ({ link, activeLink, setActiveLink }) => {
 };
 
 const NavMenu = [
-	{ title: "Beranda", url: "home" },
+	{ title: "Beranda", url: "/" },
 	{ title: "Menu", url: "menu" },
 	{ title: "Layanan", url: "layanan" },
 	{ title: "Tentang", url: "tentang" },
@@ -52,7 +53,7 @@ const Navbar = () => {
 		<nav className="fixed w-full bg-[#0F172B] z-50 p-4">
 			<div className="max-w-screen-xl flex items-center justify-between mx-auto ">
 				<Link
-					href="/home"
+					href="/"
 					className="flex items-center space-x-2"
 				>
 					<Image

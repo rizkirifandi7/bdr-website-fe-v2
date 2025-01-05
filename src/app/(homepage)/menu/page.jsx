@@ -4,6 +4,7 @@ import FilterMenu from "./components/FilterMenu";
 import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { MdOutlineFoodBank } from "react-icons/md";
+import { formatRupiahShort } from "@/lib/formatRupiah";
 
 const MenuPage = () => {
 	const [dataMenus, setDataMenus] = useState([]);
@@ -13,7 +14,7 @@ const MenuPage = () => {
 	const fetchData = useCallback(async () => {
 		const [menuResponse, kategoriResponse] = await Promise.all([
 			fetch(`${process.env.NEXT_PUBLIC_API_URL}/menu`),
-			fetch(`${process.env.NEXT_PUBLIC_API_URL}/kategori`)
+			fetch(`${process.env.NEXT_PUBLIC_API_URL}/kategori`),
 		]);
 
 		const menuData = await menuResponse.json();
@@ -39,7 +40,9 @@ const MenuPage = () => {
 		<>
 			<div className="h-full max-w-screen-xl mx-auto px-6">
 				<div className="flex justify-center items-center hero-header h-[300px] rounded-b-md">
-					<h1 className="text-3xl md:text-5xl font-bold text-white pt-14">DAFTAR MENU</h1>
+					<h1 className="text-3xl md:text-5xl font-bold text-white pt-14">
+						DAFTAR MENU
+					</h1>
 				</div>
 				<div className="h-full my-10">
 					<div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-4">
@@ -70,11 +73,14 @@ const MenuPage = () => {
 												alt={data.nama_menu}
 												width={300}
 												height={300}
-												className="w-full h-[270px] rounded-sm"
+												className="w-full h-[250px] rounded-sm object-cover"
 											/>
 										</div>
-										<div className="text-center w-full my-4">
-											<p className="font-semibold">{data.nama_menu}</p>
+										<div className="flex flex-col w-full my-4">
+											<div className="flex items-center justify-between">
+												<p className="font-semibold">{data.nama_menu}</p>
+												<p className="font-semibold">{formatRupiahShort(data.harga)}</p>
+											</div>
 											<p className="text-gray-400 w-full text-sm">
 												{data.deskripsi}
 											</p>
