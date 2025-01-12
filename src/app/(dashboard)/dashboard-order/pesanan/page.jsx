@@ -16,6 +16,7 @@ import { BlobProvider } from "@react-pdf/renderer";
 import { ArrowUpDown } from "lucide-react";
 import TableView from "@/components/dashboard/table-view";
 import { formatDateTime } from "@/lib/formatDate";
+import Cookies from "js-cookie";
 
 const PagePesanan = () => {
 	const [dataUser, setDataUser] = React.useState([]);
@@ -23,7 +24,12 @@ const PagePesanan = () => {
 	const fetchDataPesanan = React.useCallback(async () => {
 		try {
 			const response = await axios.get(
-				`${process.env.NEXT_PUBLIC_API_URL}/pesanan`
+				`${process.env.NEXT_PUBLIC_API_URL}/pesanan/user`,
+				{
+					headers: {
+						Authorization: `Bearer ${Cookies.get("auth_session")}`,
+					},
+				}
 			);
 
 			if (response.status === 200) {
@@ -41,79 +47,76 @@ const PagePesanan = () => {
 		fetchDataPesanan();
 	}, [fetchDataPesanan]);
 
-	const columns = React.useMemo(
-		() => [
-			{
-				accessorKey: "nama_pelanggan",
-				header: "Nama Pelanggan",
+	const columns = [
+		{
+			accessorKey: "nama_pelanggan",
+			header: "Nama Pelanggan",
+		},
+		{
+			accessorKey: "tipe_payment",
+			header: "Payment",
+		},
+		{
+			accessorKey: "mode",
+			header: "Tipe Order",
+		},
+		{
+			accessorKey: "item_pesanan",
+			header: "Item Pesanan",
+			cell: ({ row }) =>
+				row.original.item_pesanan.map((item, index) => (
+					<div key={index}>
+						{item.menu.nama_menu} - {item.jumlah} pcs
+					</div>
+				)),
+		},
+		{
+			accessorKey: "total",
+			header: "Total",
+		},
+		{
+			accessorKey: "status",
+			header: "Status",
+			cell: ({ row }) => <UpdatePesananStatus row={row} />,
+		},
+		{
+			accessorKey: "order_time",
+			header: ({ column }) => (
+				<Button
+					variant="ghost"
+					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+				>
+					Tanggal
+					<ArrowUpDown className="ml-2 h-4 w-4" />
+				</Button>
+			),
+			cell: ({ row }) => (
+				<div>{formatDateTime(row.getValue("order_time"))}</div>
+			),
+		},
+		{
+			id: "actions",
+			enableHiding: false,
+			cell: ({ row }) => {
+				const { id, ...rowData } = row.original;
+				return (
+					<div className="flex items-center gap-2">
+						<DetailPesanan rowData={rowData} id={id} />
+						<HapusPesanan id={id} fetchDataPesanan={fetchDataPesanan} />
+						<Button variant="outline" size="icon">
+							<BlobProvider document={<Invoice rowData={rowData} id={id} />}>
+								{({ url }) => (
+									<a href={url} target="_blank">
+										<MdOutlineFileDownload />
+									</a>
+								)}
+							</BlobProvider>
+						</Button>
+					</div>
+				);
 			},
-			{
-				accessorKey: "tipe_payment",
-				header: "Payment",
-			},
-			{
-				accessorKey: "mode",
-				header: "Tipe Order",
-			},
-			{
-				accessorKey: "item_pesanan",
-				header: "Item Pesanan",
-				cell: ({ row }) =>
-					row.original.item_pesanan.map((item, index) => (
-						<div key={index}>
-							{item.menu.nama_menu} - {item.jumlah} pcs
-						</div>
-					)),
-			},
-			{
-				accessorKey: "total",
-				header: "Total",
-			},
-			{
-				accessorKey: "status",
-				header: "Status",
-				cell: ({ row }) => <UpdatePesananStatus row={row} />,
-			},
-			{
-				accessorKey: "order_time",
-				header: ({ column }) => (
-					<Button
-						variant="ghost"
-						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-					>
-						Tanggal
-						<ArrowUpDown className="ml-2 h-4 w-4" />
-					</Button>
-				),
-				cell: ({ row }) => (
-					<div>{formatDateTime(row.getValue("order_time"))}</div>
-				),
-			},
-			{
-				id: "actions",
-				enableHiding: false,
-				cell: ({ row }) => {
-					const { id, ...rowData } = row.original;
-					return (
-						<div className="flex items-center gap-2">
-							<DetailPesanan rowData={rowData} id={id}/>
-							<HapusPesanan id={id} fetchDataPesanan={fetchDataPesanan} />
-							<Button variant="outline" size="icon">
-								<BlobProvider document={<Invoice rowData={rowData} id={id}/>}>
-									{({ url }) => (
-										<a href={url} target="_blank">
-											<MdOutlineFileDownload />
-										</a>
-									)}
-								</BlobProvider>
-							</Button>
-						</div>
-					);
-				},
-			},
-		],
-		[fetchDataPesanan]
-	);
+		},
+	];
 
 	return (
 		<TableView

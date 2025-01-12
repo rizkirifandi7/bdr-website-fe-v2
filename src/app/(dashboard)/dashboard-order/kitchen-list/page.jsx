@@ -4,9 +4,10 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import axios from "axios";
 import { toast } from "sonner";
+import Cookies from "js-cookie";
 
 const OrderCard = ({ item, onUpdate }) => (
-	<Card key={item.id} className="max-w-xs w-full flex-shrink-0">
+	<Card key={item.id} className="max-w-xs w-full flex-shrink-0 h-fit">
 		<div className="flex justify-between items-center p-4 border-b">
 			<div>
 				<h1 className="text-base font-semibold">{item.nama_pelanggan}</h1>
@@ -40,8 +41,8 @@ const OrderCard = ({ item, onUpdate }) => (
 			<h1 className="text-sm font-semibold">Catatan:</h1>
 			<p className="text-sm">{item.catatan || "-"}</p>
 		</div>
-		<div className="flex gap-x-4 justify-between items-center p-4 border-t">
-			{item.status === "preparing" && (
+		{item.status === "preparing" && (
+			<div className="flex gap-x-4 justify-between items-center p-4 border-t">
 				<>
 					<button
 						className="bg-green-500 text-white px-4 py-2 rounded-lg w-full"
@@ -56,20 +57,29 @@ const OrderCard = ({ item, onUpdate }) => (
 						Cancel
 					</button>
 				</>
-			)}
-		</div>
+			</div>
+		)}
 	</Card>
 );
 
 const PageKitchenList = () => {
-	const [orders, setOrders] = useState({ preparing: [], completed: [] });
+	const [orders, setOrders] = useState({
+		preparing: [],
+		completed: [],
+		canceled: [],
+	});
 	const [loading, setLoading] = useState(false);
 
 	const fetchOrders = useCallback(async () => {
 		setLoading(true);
 		try {
 			const response = await axios.get(
-				`${process.env.NEXT_PUBLIC_API_URL}/pesanan`
+				`${process.env.NEXT_PUBLIC_API_URL}/pesanan/user`,
+				{
+					headers: {
+						Authorization: `Bearer ${Cookies.get("auth_session")}`,
+					},
+				}
 			);
 			if (response.status === 200) {
 				const groupedOrders = response.data.data.reduce(
@@ -77,7 +87,7 @@ const PageKitchenList = () => {
 						acc[order.status]?.push(order);
 						return acc;
 					},
-					{ preparing: [], completed: [] }
+					{ preparing: [], completed: [], canceled: [] }
 				);
 				setOrders(groupedOrders);
 			} else {
@@ -121,7 +131,7 @@ const PageKitchenList = () => {
 				</div>
 			) : (
 				<>
-					{["preparing", "completed"].map((status) => (
+					{["preparing", "completed", "canceled"].map((status) => (
 						<div key={status} className="flex flex-col gap-4 mt-6">
 							<h1 className="text-base font-semibold border p-2 rounded-md text-center">
 								{status.charAt(0).toUpperCase() + status.slice(1)}

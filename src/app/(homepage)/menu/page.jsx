@@ -14,13 +14,17 @@ const MenuPage = () => {
 	const fetchData = useCallback(async () => {
 		const [menuResponse, kategoriResponse] = await Promise.all([
 			fetch(`${process.env.NEXT_PUBLIC_API_URL}/menu`),
-			fetch(`${process.env.NEXT_PUBLIC_API_URL}/kategori`),
+			fetch(`${process.env.NEXT_PUBLIC_API_URL}/kategori/user/2`),
 		]);
 
 		const menuData = await menuResponse.json();
 		const kategoriData = await kategoriResponse.json();
 
-		setDataMenus(menuData.data);
+		const filterMenu = menuData.data.filter(
+			(item) => item.ispopuler == "populer" || item.ispopuler == "tidak populer"
+		);
+
+		setDataMenus(filterMenu);
 		setDataFilterMenu(kategoriData.data);
 	}, []);
 
@@ -33,7 +37,7 @@ const MenuPage = () => {
 	};
 
 	const filteredMenus = selectedCategory
-		? dataMenus.filter((menu) => menu.id_kategori === selectedCategory.id)
+		? dataMenus.filter((menu) => menu.kategori === selectedCategory.nama_kategori)
 		: dataMenus;
 
 	return (
@@ -79,7 +83,9 @@ const MenuPage = () => {
 										<div className="flex flex-col w-full my-4">
 											<div className="flex items-center justify-between">
 												<p className="font-semibold">{data.nama_menu}</p>
-												<p className="font-semibold">{formatRupiahShort(data.harga)}</p>
+												<p className="font-semibold">
+													{formatRupiahShort(data.harga)}
+												</p>
 											</div>
 											<p className="text-gray-400 w-full text-sm">
 												{data.deskripsi}

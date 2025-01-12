@@ -54,12 +54,12 @@ const SidebarDashboard = ({ children, data, header }) => {
             <SidebarGroup key={item.title}>
               <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
               <SidebarGroupContent>
-                <SidebarMenu className="flex flex-col gap-4">
+                <SidebarMenu className="flex flex-col gap-2">
                   {item.items.map((subItem) => (
                     <SidebarMenuItem key={subItem.title}>
                       <SidebarMenuButton asChild>
                         <Link href={subItem.url}>
-                          <p className="text-2xl">{subItem.icon}</p>
+                          <p className="text-xl">{subItem.icon}</p>
                           <p className="text-base font-medium">
                             {subItem.title}
                           </p>

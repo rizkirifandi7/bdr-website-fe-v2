@@ -11,9 +11,11 @@ import TambahMenu from "./components/TambahMenu";
 import UpdateMenu from "./components/UpdateMenu";
 import HapusMenu from "./components/HapusMenu";
 import TableView from "@/components/dashboard/table-view";
+import Cookies from "js-cookie";
 
 const PageMenu = () => {
 	const [data, setData] = React.useState([]);
+	const [dataKategori, setDataKategori] = React.useState([]);
 
 	const columns = [
 		{
@@ -27,7 +29,7 @@ const PageMenu = () => {
 		},
 		{
 			accessorKey: "deskripsi",
-			header: "deskripsi",
+			header: "Deskripsi",
 			cell: ({ row }) => (
 				<div className="capitalize w-[200px] overflow-x-auto">
 					{row.getValue("deskripsi")}
@@ -40,12 +42,10 @@ const PageMenu = () => {
 			cell: ({ row }) => (
 				<div className="capitalize rounded-md">
 					<Image
-						src={row.getValue(
-							"gambar"
-						)}
+						src={row.getValue("gambar")}
 						alt={row.getValue("gambar")}
-						width={80}
-						height={80}
+						width={70}
+						height={70}
 						className="rounded-md w-auto h-auto"
 						priority
 					/>
@@ -96,32 +96,48 @@ const PageMenu = () => {
 				return (
 					<div className="flex items-center gap-2">
 						<UpdateMenu
-							fetchDataMenu={fetchDataMenu}
+							fetchDataMenu={fetchData}
 							id={id}
+							dataKategori={dataKategori}
 							rowData={rowData}
 						/>
-						<HapusMenu id={id} fetchDataMenu={fetchDataMenu} />
+						<HapusMenu id={id} fetchDataMenu={fetchData} />
 					</div>
 				);
 			},
 		},
 	];
 
-	const fetchDataMenu = React.useCallback(async () => {
-		const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/menu`);
-		setData(response.data.data);
+	const fetchData = React.useCallback(async () => {
+		const [menuResponse, kategoriResponse] = await Promise.all([
+			axios.get(`${process.env.NEXT_PUBLIC_API_URL}/menu/user`, {
+				headers: {
+					Authorization: `Bearer ${Cookies.get("auth_session")}`,
+				},
+			}),
+			axios.get(`${process.env.NEXT_PUBLIC_API_URL}/kategori/user`, {
+				headers: {
+					Authorization: `Bearer ${Cookies.get("auth_session")}`,
+				},
+			}),
+		]);
+
+		setData(menuResponse.data.data);
+		setDataKategori(kategoriResponse.data.data);
 	}, []);
 
 	React.useEffect(() => {
-		fetchDataMenu();
-	}, [fetchDataMenu]);
+		fetchData();
+	}, [fetchData]);
 
 	return (
 		<>
 			<TableView
 				columns={columns}
 				data={data}
-				TambahComponent={() => <TambahMenu fetchDataMenu={fetchDataMenu} />}
+				TambahComponent={() => (
+					<TambahMenu fetchDataMenu={fetchData} dataKategori={dataKategori} />
+				)}
 				title="Dashboard Menu"
 				search="nama_menu"
 				pageSize={5}

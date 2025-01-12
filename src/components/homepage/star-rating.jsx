@@ -7,7 +7,7 @@ const StarRating = ({ rating, setRating }) => {
 	};
 
 	return (
-		<div className="flex space-x-2">
+		<div className="flex justify-around items-center w-full">
 			{[...Array(5)].map((_, index) => {
 				const value = index + 1;
 				return (

@@ -7,7 +7,8 @@ export function middleware(request) {
 	if (
 		!token &&
 		(pathname.startsWith("/dashboard-order") ||
-			pathname.startsWith("/dashboard-home"))
+			pathname.startsWith("/dashboard-home") ||
+			pathname.startsWith("/dashboard-superadmin"))
 	) {
 		return NextResponse.redirect(new URL("/signin", request.url));
 	}
@@ -16,5 +17,9 @@ export function middleware(request) {
 }
 
 export const config = {
-	matcher: ["/dashboard-order/:path*", "/dashboard-home/:path*"],
+	matcher: [
+		"/dashboard-order/:path*",
+		"/dashboard-home/:path*",
+		"/dashboard-superadmin/:path*",
+	],
 };

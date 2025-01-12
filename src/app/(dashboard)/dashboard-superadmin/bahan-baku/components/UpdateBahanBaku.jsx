@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { Button } from "@/components/ui/button";
 import {
 	DialogContent,
@@ -16,13 +15,6 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import axios from "axios";
@@ -33,35 +25,34 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 const FormSchema = z.object({
-	nama: z.string().nonempty("Nama harus diisi."),
-	email: z.string().nonempty("Email harus diisi."),
-	nama_kategori: z.any(),
-	role: z.any(),
+	nama_bahan: z.string().nonempty("Nama harus diisi."),
+	jumlah: z.string().nonempty("Jumlah harus diisi."),
+	harga: z.any(),
 });
 
-const UpdateUser = ({ fetchDataUser, rowData, id }) => {
+const UpdateBahanBaku = ({ fetchData, rowData, id }) => {
 	const [openTambah, setOpenTambah] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const form = useForm({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
-			nama: rowData.nama,
-			email: rowData.email,
-			password: "",
-			role: rowData.role,
+			nama_bahan: rowData.nama_bahan,
+			jumlah: rowData.jumlah,
+			harga: rowData.harga,
 		},
 	});
 
-	const hnadleEdit = async (data) => {
+	const handleTambah = async (data) => {
+		setIsLoading(true);
 		try {
 			const formData = new FormData();
-			formData.append("nama", data.nama);
-			formData.append("email", data.email);
-			formData.append("password", data.password);
-			formData.append("role", data.role);
+			formData.append("nama_bahan", data.nama_bahan);
+			formData.append("jumlah", data.jumlah);
+			formData.append("harga", data.harga);
 
 			const response = await axios.put(
-				`${process.env.NEXT_PUBLIC_API_URL}/user/${id}`,
+				`${process.env.NEXT_PUBLIC_API_URL}/bahan-baku/${id}`,
 				formData,
 				{
 					headers: {
@@ -70,15 +61,17 @@ const UpdateUser = ({ fetchDataUser, rowData, id }) => {
 				}
 			);
 
-			if (response.data.status === true) {
-				toast.success("User berhasil ditambahkan");
+			if (response.status === 200) {
+				toast.success("Bahan baku berhasil diupdate");
 				form.reset();
 				setOpenTambah(false);
-				fetchDataUser();
+				fetchData();
 			}
 		} catch (error) {
-			console.error("Error adding user:", error);
-			toast.error("Gagal menambahkan user");
+			console.error("Error adding bahan baku:", error);
+			toast.error("Gagal menambahkan bahan baku");
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -91,17 +84,20 @@ const UpdateUser = ({ fetchDataUser, rowData, id }) => {
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">
 				<DialogHeader>
-					<DialogTitle>Tambah User</DialogTitle>
-					<DialogDescription>Tambahkan user baru.</DialogDescription>
+					<DialogTitle>Update Bahan baku</DialogTitle>
+					<DialogDescription>Update bahan baku baru.</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(hnadleEdit)} className="space-y-4">
+					<form
+						onSubmit={form.handleSubmit(handleTambah)}
+						className="space-y-4"
+					>
 						<FormField
 							control={form.control}
-							name="nama"
+							name="nama_bahan"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Nama</FormLabel>
+									<FormLabel>Nama Bahan</FormLabel>
 									<FormControl>
 										<Input
 											className="shadow-none"
@@ -116,14 +112,14 @@ const UpdateUser = ({ fetchDataUser, rowData, id }) => {
 						/>
 						<FormField
 							control={form.control}
-							name="email"
+							name="jumlah"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Email</FormLabel>
+									<FormLabel>Jumlah</FormLabel>
 									<FormControl>
 										<Input
 											className="shadow-none"
-											placeholder="masukkan email..."
+											placeholder="masukkan jumlah..."
 											{...field}
 											type="text"
 										/>
@@ -135,51 +131,29 @@ const UpdateUser = ({ fetchDataUser, rowData, id }) => {
 
 						<FormField
 							control={form.control}
-							name="password"
+							name="harga"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Password</FormLabel>
+									<FormLabel>Harga</FormLabel>
 									<FormControl>
 										<Input
 											className="shadow-none"
-											placeholder="masukkan password..."
+											placeholder="masukkan harga..."
 											{...field}
-											type="text"
+											type="number"
 										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
 							)}
 						/>
-						<FormField
-							control={form.control}
-							name="role"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Role</FormLabel>
-									<FormControl>
-										<Select
-											onValueChange={field.onChange}
-											defaultValue={field.value}
-										>
-											<FormControl>
-												<SelectTrigger>
-													<SelectValue placeholder="role" />
-												</SelectTrigger>
-											</FormControl>
-											<SelectContent>
-												<SelectItem value="admin">Admin</SelectItem>
-												<SelectItem value="pegawai">Pegawai</SelectItem>
-											</SelectContent>
-										</Select>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
 						<DialogFooter>
-							<Button type="submit" className="w-full mt-2">
-								Submit
+							<Button
+								type="submit"
+								className="w-full mt-2"
+								disabled={isLoading}
+							>
+								{isLoading ? "Loading..." : "Submit"}
 							</Button>
 						</DialogFooter>
 					</form>
@@ -189,4 +163,4 @@ const UpdateUser = ({ fetchDataUser, rowData, id }) => {
 	);
 };
 
-export default UpdateUser;
+export default UpdateBahanBaku;

@@ -17,20 +17,36 @@ import StarRating from "./star-rating";
 import { Input } from "../ui/input";
 
 export const Feedback = () => {
-	const [rating, setRating] = useState(0);
-	const [deskripsi, setDeskripsi] = useState("");
+	const [nama, setNama] = useState("");
+	const [noTelepon, setNoTelepon] = useState("");
+	const [ratingMenu, setRatingMenu] = useState(0);
+	const [ratingPelayanan, setRatingPelayanan] = useState(0);
+	const [ratingRestoran, setRatingRestoran] = useState(0);
+	const [saran, setSaran] = useState("");
+	const [kritik, setKritik] = useState("");
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		if (!rating || !deskripsi) {
+		if (
+			!ratingMenu ||
+			!ratingPelayanan ||
+			!ratingRestoran ||
+			!saran ||
+			!kritik
+		) {
 			toast.error("Semua kolom harus diisi.");
 			return;
 		}
 
 		const feedbackData = {
-			rating,
-			deskripsi,
+			nama,
+			nomor_hp: noTelepon,
+			saran,
+			kritik,
+			rating_menu: ratingMenu,
+			rating_pelayanan: ratingPelayanan,
+			rating_restoran: ratingRestoran,
 		};
 
 		createFeedback(feedbackData);
@@ -49,8 +65,13 @@ export const Feedback = () => {
 
 		if (response.status === 201) {
 			toast.success("Feedback berhasil dibuat.");
-			setRating(0);
-			setDeskripsi("");
+			setNama("");
+			setNoTelepon("");
+			setRatingMenu(0);
+			setRatingPelayanan(0);
+			setRatingRestoran(0);
+			setSaran("");
+			setKritik("");
 		} else {
 			toast.error("Feedback gagal dibuat.");
 		}
@@ -75,7 +96,7 @@ export const Feedback = () => {
 					</div>
 
 					<div className=" flex justify-center items-center mt-10 md:mt-0">
-						<Card className="w-[450px]">
+						<Card className="w-full md:w-[550px]">
 							<CardHeader>
 								<CardTitle>Testimoni</CardTitle>
 								<CardDescription>
@@ -91,8 +112,10 @@ export const Feedback = () => {
 											</Label>
 											<Input
 												type="text"
-												placeholder="Input nama..."
+												placeholder="Input nama...(optional)"
 												className="shadow-none"
+												value={nama}
+												onChange={(e) => setNama(e.target.value)}
 											/>
 										</div>
 										<div className="flex flex-col space-y-1.5">
@@ -101,37 +124,60 @@ export const Feedback = () => {
 											</Label>
 											<Input
 												type="number"
-												placeholder="Input no.telepon..."
+												placeholder="Input no.telepon...(optional)"
 												className="shadow-none"
+												value={noTelepon}
+												onChange={(e) => setNoTelepon(e.target.value)}
 											/>
 										</div>
 										<div className="flex flex-col space-y-1.5">
-											<Label htmlFor="rating" className="text-sm">
+											<Label htmlFor="rating_restoran" className="text-sm">
 												Restoran
 											</Label>
-											<StarRating rating={rating} setRating={setRating} />
+											<StarRating
+												rating={ratingRestoran}
+												setRating={setRatingRestoran}
+											/>
 										</div>
 										<div className="flex flex-col space-y-1.5">
-											<Label htmlFor="rating" className="text-sm">
+											<Label htmlFor="rating_pelayanan" className="text-sm">
 												Pelayanan
 											</Label>
-											<StarRating rating={rating} setRating={setRating} />
+											<StarRating
+												rating={ratingPelayanan}
+												setRating={setRatingPelayanan}
+											/>
 										</div>
 										<div className="flex flex-col space-y-1.5">
-											<Label htmlFor="rating" className="text-sm">
+											<Label htmlFor="rating_menu" className="text-sm">
 												Menu
 											</Label>
-											<StarRating rating={rating} setRating={setRating} />
+											<StarRating
+												rating={ratingMenu}
+												setRating={setRatingMenu}
+											/>
 										</div>
 										<div className="flex flex-col space-y-1.5">
-											<Label htmlFor="feedback" className="text-sm">
-												Feedback
+											<Label htmlFor="saran" className="text-sm">
+												Saran
 											</Label>
 											<Textarea
-												id="feedback"
-												placeholder="Catatan"
-												value={deskripsi}
-												onChange={(e) => setDeskripsi(e.target.value)}
+												id="saran"
+												placeholder="Catatan Saran"
+												value={saran}
+												onChange={(e) => setSaran(e.target.value)}
+												className="bg-white text-black text-base rounded-sm h-[100px]"
+											/>
+										</div>
+										<div className="flex flex-col space-y-1.5">
+											<Label htmlFor="kritik" className="text-sm">
+												Kritik
+											</Label>
+											<Textarea
+												id="kritik"
+												placeholder="Catatan Kritik"
+												value={kritik}
+												onChange={(e) => setKritik(e.target.value)}
 												className="bg-white text-black text-base rounded-sm h-[100px]"
 											/>
 										</div>

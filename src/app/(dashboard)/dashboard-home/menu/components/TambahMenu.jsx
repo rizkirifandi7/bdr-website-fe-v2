@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { Button } from "@/components/ui/button";
 import {
 	DialogContent,
@@ -26,6 +25,7 @@ import {
 } from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
+import Cookies from "js-cookie";
 import { PlusCircle } from "lucide-react";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useForm } from "react-hook-form";
@@ -47,7 +47,14 @@ const TambahMenu = ({ fetchDataMenu }) => {
 	const [isLoading, setIsLoading] = useState(false);
 
 	const fetchDataKategori = useCallback(async () => {
-		const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/kategori`);
+		const response = await fetch(
+			`${process.env.NEXT_PUBLIC_API_URL}/kategori/user`,
+			{
+				headers: {
+					Authorization: `Bearer ${Cookies.get("auth_session")}`,
+				},
+			}
+		);
 		const data = await response.json();
 		setDataKategori(data.data);
 	}, []);
@@ -82,6 +89,9 @@ const TambahMenu = ({ fetchDataMenu }) => {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/menu`, {
 				method: "POST",
 				body: formData,
+				headers: {
+					Authorization: `Bearer ${Cookies.get("auth_session")}`,
+				},
 			});
 
 			if (response.status === 201) {
@@ -242,7 +252,11 @@ const TambahMenu = ({ fetchDataMenu }) => {
 							/>
 						</div>
 						<DialogFooter>
-							<Button type="submit" className="w-full mt-2" disabled={isLoading}>
+							<Button
+								type="submit"
+								className="w-full mt-2"
+								disabled={isLoading}
+							>
 								{isLoading ? "Loading..." : "Submit"}
 							</Button>
 						</DialogFooter>

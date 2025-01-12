@@ -5,6 +5,7 @@ import SidebarDashboard from "@/components/dashboard/sidebar-dashboard";
 import { OrderNavData } from "@/constant/sidebarData";
 import DashboardHeaderOrder from "@/components/dashboard/header-order";
 import { CartProvider } from "@/hooks/useCart";
+import { CartBahanBakuProvider } from "@/hooks/useCartBahan";
 
 export const metadata = {
 	title: "Dashboard | Bakso Dono Reborn",
@@ -22,7 +23,7 @@ const LayoutAdmin = ({ children }) => {
 				<SidebarDashboard data={OrderNavData} header={<DashboardHeaderOrder />}>
 					<div className="p-4">
 						<CartProvider>
-							{children}
+							<CartBahanBakuProvider>{children}</CartBahanBakuProvider>
 						</CartProvider>
 					</div>
 				</SidebarDashboard>

@@ -72,8 +72,10 @@ const PageLogin = () => {
 				await setCookie("auth_session", token);
 				toast.success("Login successful.");
 
-				if (role === "admin" || role === "pegawai") {
+				if (role === "mitra") {
 					router.push("/dashboard-order/home");
+				} else if (role === "admin") {
+					router.push("/dashboard-superadmin/bahan-baku");
 				} else if (role === "adminhome") {
 					router.push("/dashboard-home/menu");
 				} else {

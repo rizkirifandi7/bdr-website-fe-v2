@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { Button } from "@/components/ui/button";
 import {
 	DialogContent,
@@ -41,24 +40,8 @@ const FormSchema = z.object({
 	harga: z.any(),
 });
 
-const UpdateMenu = ({ fetchDataMenu, id, rowData }) => {
+const UpdateMenu = ({ fetchDataMenu, id, rowData, dataKategori }) => {
 	const [openTambah, setOpenTambah] = useState(false);
-	const [dataKategori, setDataKategori] = useState([]);
-
-	useEffect(() => {
-		const fetchDataKategori = async () => {
-			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/kategori`,
-				{
-					cache: "force-cache",
-				}
-			);
-			const data = await response.json();
-			setDataKategori(data.data);
-		};
-
-		fetchDataKategori();
-	}, []);
 
 	const form = useForm({
 		resolver: zodResolver(FormSchema),

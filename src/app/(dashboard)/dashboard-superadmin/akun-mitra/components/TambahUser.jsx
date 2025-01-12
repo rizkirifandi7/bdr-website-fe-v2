@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { Button } from "@/components/ui/button";
 import {
 	DialogContent,
@@ -16,7 +15,6 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
 	Select,
 	SelectContent,
@@ -26,71 +24,71 @@ import {
 } from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
+import axios from "axios";
 import { PlusCircle } from "lucide-react";
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-const FormSchema = z.object({
-	nama_menu: z.string().nonempty("Nama harus diisi."),
-	deskripsi: z.string().nonempty("Deskripsi harus diisi."),
-	gambar: z.any(),
-	nama_kategori: z.any(),
-	harga: z.any(),
-	ispopuler: z.any(),
-});
+const FormSchema = z
+	.object({
+		nama: z.string().nonempty("Nama harus diisi."),
+		email: z.string().nonempty("Email harus diisi."),
+		password: z.string().nonempty("password harus diisi."),
+		retypePassword: z.string().nonempty("retypePassword harus diisi."),
+		role: z.any(),
+		pin: z.string().nonempty("pin harus diisi."),
+	})
+	.refine((data) => data.password === data.retypePassword, {
+		message: "Password dan Retype Password harus sama.",
+		path: ["retypePassword"], // path of error
+	});
 
-const TambahMenu = ({ fetchDataMenu }) => {
+const TambahUser = ({ fetchDataUser }) => {
 	const [openTambah, setOpenTambah] = useState(false);
-	const [dataKategori, setDataKategori] = useState([]);
-
-	const fetchDataKategori = useCallback(async () => {
-		const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/kategori`);
-		const data = await response.json();
-		setDataKategori(data.data);
-	}, []);
-
-	useEffect(() => {
-		fetchDataKategori();
-	}, [fetchDataKategori]);
 
 	const form = useForm({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
-			nama_menu: "",
-			deskripsi: "",
-			gambar: "",
-			nama_kategori: "",
-			harga: "",
-			ispopuler: "",
+			nama: "",
+			email: "",
+			password: "",
+			retypePassword: "",
+			role: "",
+			pin: "",
 		},
 	});
 
 	const handleTambah = async (data) => {
 		try {
 			const formData = new FormData();
-			formData.append("nama_menu", data.nama_menu);
-			formData.append("deskripsi", data.deskripsi);
-			formData.append("gambar", data.gambar[0]);
-			formData.append("nama_kategori", data.nama_kategori);
-			formData.append("harga", data.harga);
-			formData.append("ispopuler", data.ispopuler);
+			formData.append("nama", data.nama);
+			formData.append("email", data.email);
+			formData.append("password", data.password);
+			formData.append("retypePassword", data.retypePassword);
+			formData.append("role", data.role);
+			formData.append("pin", data.pin);
 
-			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/menu`, {
-				method: "POST",
-				body: formData,
-			});
+			const response = await axios.post(
+				`${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
+				formData,
+				{
+					headers: {
+						"Content-Type": "application/json",
+					},
+				}
+			);
 
 			if (response.status === 201) {
-				toast.success("Menu berhasil ditambahkan");
+				toast.success("User berhasil ditambahkan");
 				form.reset();
 				setOpenTambah(false);
-				fetchDataMenu();
+				fetchDataUser();
 			}
 		} catch (error) {
-			console.error("Error adding menu:", error);
-			toast.error("Gagal menambahkan menu");
+			console.error("Error adding user:", error);
+			toast.error("Gagal menambahkan user");
 		}
 	};
 
@@ -99,13 +97,13 @@ const TambahMenu = ({ fetchDataMenu }) => {
 			<DialogTrigger asChild>
 				<Button>
 					<PlusCircle />
-					Tambah Menu
+					Tambah User
 				</Button>
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">
 				<DialogHeader>
-					<DialogTitle>Tambah Menu</DialogTitle>
-					<DialogDescription>Tambahkan menu baru.</DialogDescription>
+					<DialogTitle>Tambah User</DialogTitle>
+					<DialogDescription>Tambahkan user baru.</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>
 					<form
@@ -114,7 +112,7 @@ const TambahMenu = ({ fetchDataMenu }) => {
 					>
 						<FormField
 							control={form.control}
-							name="nama_menu"
+							name="nama"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Nama</FormLabel>
@@ -132,14 +130,14 @@ const TambahMenu = ({ fetchDataMenu }) => {
 						/>
 						<FormField
 							control={form.control}
-							name="deskripsi"
+							name="email"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Deskripsi</FormLabel>
+									<FormLabel>Email</FormLabel>
 									<FormControl>
 										<Input
 											className="shadow-none"
-											placeholder="masukkan deskripsi..."
+											placeholder="masukkan email..."
 											{...field}
 											type="text"
 										/>
@@ -151,16 +149,16 @@ const TambahMenu = ({ fetchDataMenu }) => {
 
 						<FormField
 							control={form.control}
-							name="harga"
+							name="password"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Harga</FormLabel>
+									<FormLabel>Password</FormLabel>
 									<FormControl>
 										<Input
 											className="shadow-none"
-											placeholder="masukkan harga..."
+											placeholder="masukkan password..."
 											{...field}
-											type="number"
+											type="password"
 										/>
 									</FormControl>
 									<FormMessage />
@@ -169,33 +167,17 @@ const TambahMenu = ({ fetchDataMenu }) => {
 						/>
 						<FormField
 							control={form.control}
-							name="nama_kategori"
+							name="retypePassword"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Kategori</FormLabel>
+									<FormLabel>Retype Password</FormLabel>
 									<FormControl>
-										<Select
-											onValueChange={field.onChange}
-											defaultValue={field.value}
-										>
-											<FormControl>
-												<SelectTrigger>
-													<SelectValue placeholder="kategori" />
-												</SelectTrigger>
-											</FormControl>
-											<SelectContent>
-												{dataKategori.map((kategori) => {
-													return (
-														<SelectItem
-															key={kategori.id}
-															value={kategori.nama_kategori}
-														>
-															{kategori.nama_kategori}
-														</SelectItem>
-													);
-												})}
-											</SelectContent>
-										</Select>
+										<Input
+											className="shadow-none"
+											placeholder="masukkan retypePassword..."
+											{...field}
+											type="password"
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -203,25 +185,41 @@ const TambahMenu = ({ fetchDataMenu }) => {
 						/>
 						<FormField
 							control={form.control}
-							name="ispopuler"
+							name="pin"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Populer Menu</FormLabel>
+									<FormLabel>Retype Password</FormLabel>
+									<FormControl>
+										<Input
+											className="shadow-none"
+											placeholder="masukkan pin..."
+											{...field}
+											type="password"
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="role"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Role</FormLabel>
 									<FormControl>
 										<Select
 											onValueChange={field.onChange}
 											defaultValue={field.value}
 										>
-											<FormControl>
-												<SelectTrigger>
-													<SelectValue placeholder="Populer Menu" />
-												</SelectTrigger>
-											</FormControl>
+											<SelectTrigger>
+												<SelectValue placeholder="role" />
+											</SelectTrigger>
 											<SelectContent>
-												<SelectItem value="populer">Populer</SelectItem>
-												<SelectItem value="tidak populer">
-													Tidak Populer
-												</SelectItem>
+												<SelectItem value="adminhome">Adminhome</SelectItem>
+												<SelectItem value="admin">Admin</SelectItem>
+												<SelectItem value="mitra">Mitra</SelectItem>
+												<SelectItem value="pegawai">Pegawai</SelectItem>
 											</SelectContent>
 										</Select>
 									</FormControl>
@@ -229,14 +227,6 @@ const TambahMenu = ({ fetchDataMenu }) => {
 								</FormItem>
 							)}
 						/>
-						<div className="space-y-2">
-							<Label className="">Gambar</Label>
-							<Input
-								type="file"
-								className="shadow-none h-full py-1.5"
-								onChange={(e) => form.setValue("gambar", e.target.files)}
-							/>
-						</div>
 						<DialogFooter>
 							<Button type="submit" className="w-full mt-2">
 								Submit
@@ -249,4 +239,4 @@ const TambahMenu = ({ fetchDataMenu }) => {
 	);
 };
 
-export default TambahMenu;
+export default TambahUser;

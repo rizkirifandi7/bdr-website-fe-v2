@@ -13,23 +13,27 @@ import React from "react";
 import { FiTrash2 } from "react-icons/fi";
 import { toast } from "sonner";
 
-const HapusMenu = ({ id, fetchDataMenu }) => {
+const HapusBahanBaku = ({ id, fetchData }) => {
 	const [openHapus, setOpenHapus] = React.useState(false);
 	const [selectedId, setSelectedId] = React.useState(null);
+	const [loading, setLoading] = React.useState(false);
 
 	const handleDelete = async () => {
+		setLoading(true);
 		try {
 			const response = await axios.delete(
-				`${process.env.NEXT_PUBLIC_API_URL}/menu/${selectedId}`
+				`${process.env.NEXT_PUBLIC_API_URL}/bahan-baku/${selectedId}`
 			);
 			if (response.status === 200) {
-				toast.success("Berita berhasil dihapus");
+				toast.success("Bahan baku berhasil dihapus");
 				setOpenHapus(false);
-				fetchDataMenu();
+				fetchData();
 			}
 		} catch (error) {
-			console.error("Error deleting berita:", error);
-			toast.error("Gagal menghapus berita");
+			console.error("Error deleting bahan baku:", error);
+			toast.error("Gagal menghapus bahan baku");
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -50,9 +54,9 @@ const HapusMenu = ({ id, fetchDataMenu }) => {
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-[425px]">
 					<DialogHeader>
-						<DialogTitle>Hapus Menu</DialogTitle>
+						<DialogTitle>Hapus Bahan baku</DialogTitle>
 						<DialogDescription>
-							Apakah anda yakin ingin menghapus menu ini?
+							Apakah anda yakin ingin menghapus bahan baku ini?
 						</DialogDescription>
 					</DialogHeader>
 					<DialogFooter>
@@ -60,8 +64,9 @@ const HapusMenu = ({ id, fetchDataMenu }) => {
 							variant="destructive"
 							className="w-full"
 							onClick={() => handleDelete()}
+							disabled={loading}
 						>
-							Hapus
+							{loading ? "Loading..." : "Hapus"}
 						</Button>
 						<div className="w-full" onClick={() => setOpenHapus(false)}>
 							<Button variant="outline" className="w-full">
@@ -75,4 +80,4 @@ const HapusMenu = ({ id, fetchDataMenu }) => {
 	);
 };
 
-export default HapusMenu;
+export default HapusBahanBaku;

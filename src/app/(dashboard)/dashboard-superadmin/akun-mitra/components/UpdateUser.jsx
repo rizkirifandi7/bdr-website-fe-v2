@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { Button } from "@/components/ui/button";
 import {
 	DialogContent,
@@ -26,50 +25,44 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import axios from "axios";
-import { PlusCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { MdOutlineEdit } from "react-icons/md";
 import { toast } from "sonner";
 import { z } from "zod";
 
-const FormSchema = z
-	.object({
-		nama: z.string().nonempty("Nama harus diisi."),
-		email: z.string().nonempty("Email harus diisi."),
-		password: z.string().nonempty("password harus diisi."),
-		retypePassword: z.string().nonempty("retypePassword harus diisi."),
-		role: z.any(),
-	})
-	.refine((data) => data.password === data.retypePassword, {
-		message: "Password dan Retype Password harus sama.",
-		path: ["retypePassword"], // path of error
-	});
+const FormSchema = z.object({
+	nama: z.string().nonempty("Nama harus diisi."),
+	email: z.string().nonempty("Email harus diisi."),
+	nama_kategori: z.any(),
+	role: z.any(),
+});
 
-const TambahUser = ({ fetchDataUser }) => {
+const UpdateUser = ({ fetchDataUser, rowData, id }) => {
 	const [openTambah, setOpenTambah] = useState(false);
 
 	const form = useForm({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
-			nama: "",
-			email: "",
+			nama: rowData.nama,
+			email: rowData.email,
 			password: "",
-			retypePassword: "",
-			role: "",
+			role: rowData.role,
+			pin: "",
 		},
 	});
 
-	const handleTambah = async (data) => {
+	const hnadleEdit = async (data) => {
 		try {
 			const formData = new FormData();
 			formData.append("nama", data.nama);
 			formData.append("email", data.email);
 			formData.append("password", data.password);
-			formData.append("retypePassword", data.retypePassword);
 			formData.append("role", data.role);
+			formData.append("pin", data.pin);
 
-			const response = await axios.post(
-				`${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
+			const response = await axios.put(
+				`${process.env.NEXT_PUBLIC_API_URL}/user/${id}`,
 				formData,
 				{
 					headers: {
@@ -78,7 +71,7 @@ const TambahUser = ({ fetchDataUser }) => {
 				}
 			);
 
-			if (response.status === 201) {
+			if (response.data.status === true) {
 				toast.success("User berhasil ditambahkan");
 				form.reset();
 				setOpenTambah(false);
@@ -93,9 +86,8 @@ const TambahUser = ({ fetchDataUser }) => {
 	return (
 		<Dialog open={openTambah} onOpenChange={setOpenTambah}>
 			<DialogTrigger asChild>
-				<Button>
-					<PlusCircle />
-					Tambah User
+				<Button variant="outline" size="icon">
+					<MdOutlineEdit />
 				</Button>
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">
@@ -104,10 +96,7 @@ const TambahUser = ({ fetchDataUser }) => {
 					<DialogDescription>Tambahkan user baru.</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>
-					<form
-						onSubmit={form.handleSubmit(handleTambah)}
-						className="space-y-4"
-					>
+					<form onSubmit={form.handleSubmit(hnadleEdit)} className="space-y-4">
 						<FormField
 							control={form.control}
 							name="nama"
@@ -156,25 +145,26 @@ const TambahUser = ({ fetchDataUser }) => {
 											className="shadow-none"
 											placeholder="masukkan password..."
 											{...field}
-											type="password"
+											type="text"
 										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
 							)}
 						/>
+
 						<FormField
 							control={form.control}
-							name="retypePassword"
+							name="pin"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Retype Password</FormLabel>
+									<FormLabel>Pin</FormLabel>
 									<FormControl>
 										<Input
 											className="shadow-none"
-											placeholder="masukkan retypePassword..."
+											placeholder="masukkan pin..."
 											{...field}
-											type="password"
+											type="text"
 										/>
 									</FormControl>
 									<FormMessage />
@@ -192,9 +182,11 @@ const TambahUser = ({ fetchDataUser }) => {
 											onValueChange={field.onChange}
 											defaultValue={field.value}
 										>
-											<SelectTrigger>
-												<SelectValue placeholder="role" />
-											</SelectTrigger>
+											<FormControl>
+												<SelectTrigger>
+													<SelectValue placeholder="role" />
+												</SelectTrigger>
+											</FormControl>
 											<SelectContent>
 												<SelectItem value="admin">Admin</SelectItem>
 												<SelectItem value="pegawai">Pegawai</SelectItem>
@@ -217,4 +209,4 @@ const TambahUser = ({ fetchDataUser }) => {
 	);
 };
 
-export default TambahUser;
+export default UpdateUser;

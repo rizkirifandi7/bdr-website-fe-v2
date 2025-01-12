@@ -1,34 +1,39 @@
 "use client";
 
 import React, { useState } from "react";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
-import { Button } from "../ui/button";
 import axios from "axios";
 import { toast } from "sonner";
-
+import { Input } from "../ui/input";
 import {
 	Select,
 	SelectContent,
 	SelectGroup,
 	SelectItem,
-	SelectLabel,
 	SelectTrigger,
 	SelectValue,
-} from "@/components/ui/select";
+} from "../ui/select";
+import { Textarea } from "../ui/textarea";
+import { Button } from "../ui/button";
 
 const Reservasi = () => {
-	const [date, setDate] = useState();
-	const [name, setName] = useState("");
-	const [phone, setPhone] = useState("");
-	const [people, setPeople] = useState("");
-	const [request, setRequest] = useState("");
-	const [ruangan, setRuangan] = useState("");
+	const [formData, setFormData] = useState({
+		date: "",
+		name: "",
+		phone: "",
+		people: "",
+		request: "",
+		ruangan: "",
+	});
+
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+		setFormData((prevData) => ({ ...prevData, [name]: value }));
+	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		const { name, phone, date, people, request, ruangan } = formData;
 
-		// Validation
 		if (!name || !phone || !date || !people || !request || !ruangan) {
 			toast.error("Semua kolom harus diisi.");
 			return;
@@ -43,31 +48,29 @@ const Reservasi = () => {
 			ruangan,
 		};
 
-		createReservation(reservationData);
-	};
+		try {
+			const response = await axios.post(
+				`${process.env.NEXT_PUBLIC_API_URL}/reservasi`,
+				reservationData,
+				{ headers: { "Content-Type": "application/json" } }
+			);
 
-	const createReservation = async (reservationData) => {
-		const response = await axios.post(
-			`${process.env.NEXT_PUBLIC_API_URL}/reservasi`,
-			reservationData,
-			{
-				headers: {
-					"Content-Type": "application/json",
-				},
+			if (response.status === 201) {
+				toast.success("Reservasi berhasil dibuat.");
+				sendWhatsAppMessage(reservationData);
+				setFormData({
+					date: "",
+					name: "",
+					phone: "",
+					people: "",
+					request: "",
+					ruangan: "",
+				});
+			} else {
+				toast.error("Reservasi gagal dibuat.");
 			}
-		);
-
-		if (response.status === 201) {
-			toast.success("Reservasi berhasil dibuat.");
-			sendWhatsAppMessage(reservationData);
-			setRuangan("");
-			setName("");
-			setPhone("");
-			setDate(null);
-			setPeople("");
-			setRequest("");
-		} else {
-			toast.error("Reservasi gagal dibuat.");
+		} catch (error) {
+			toast.error("Terjadi kesalahan pada server.");
 		}
 	};
 
@@ -96,7 +99,7 @@ const Reservasi = () => {
 							allowFullScreen
 						></iframe>
 					</div>
-					<div className="flex flex-col justify-center p-10 w-full h-[600px] ">
+					<div className="flex flex-col justify-center p-10 w-full h-[600px]">
 						<p className="text-lg font-custom text-headingText">Reservasi</p>
 						<h1 className="text-[2.5rem] font-bold text-white">
 							Reservasi Tempat
@@ -106,25 +109,38 @@ const Reservasi = () => {
 								<div className="flex gap-4">
 									<Input
 										type="text"
+										name="name"
 										className="bg-white text-black text-base rounded-sm h-[60px]"
 										placeholder="Nama Anda"
-										value={name}
-										onChange={(e) => setName(e.target.value)}
+										value={formData.name}
+										onChange={handleChange}
 									/>
 									<Input
 										type="number"
+										name="phone"
 										className="bg-white text-black text-base rounded-sm h-[60px]"
 										placeholder="Nomor HP"
-										value={phone}
-										onChange={(e) => setPhone(e.target.value)}
+										value={formData.phone}
+										onChange={handleChange}
 									/>
 								</div>
 								<div className="flex gap-4 w-full">
 									<Input
 										type="datetime-local"
+										name="date"
 										className="bg-white text-black text-base rounded-sm h-[60px] w-full"
+										value={formData.date}
+										onChange={handleChange}
 									/>
-									<Select value={people} onValueChange={setPeople}>
+									<Select
+										value={formData.people}
+										onValueChange={(value) =>
+											setFormData((prevData) => ({
+												...prevData,
+												people: value,
+											}))
+										}
+									>
 										<SelectTrigger className="w-full h-[60px] bg-white text-base rounded-sm placeholder:text-muted-foreground">
 											<SelectValue
 												placeholder="Jumlah Orang"
@@ -146,7 +162,12 @@ const Reservasi = () => {
 										</SelectContent>
 									</Select>
 								</div>
-								<Select value={ruangan} onValueChange={setRuangan}>
+								<Select
+									value={formData.ruangan}
+									onValueChange={(value) =>
+										setFormData((prevData) => ({ ...prevData, ruangan: value }))
+									}
+								>
 									<SelectTrigger className="w-full h-[60px] bg-white text-base rounded-sm placeholder:text-muted-foreground">
 										<SelectValue
 											placeholder="Ruangan"
@@ -168,10 +189,11 @@ const Reservasi = () => {
 									</SelectContent>
 								</Select>
 								<Textarea
+									name="request"
 									placeholder="Catatan"
 									className="bg-white text-black text-base rounded-sm h-[100px]"
-									value={request}
-									onChange={(e) => setRequest(e.target.value)}
+									value={formData.request}
+									onChange={handleChange}
 								/>
 								<Button
 									type="submit"

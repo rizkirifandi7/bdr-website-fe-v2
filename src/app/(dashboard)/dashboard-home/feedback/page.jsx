@@ -5,23 +5,109 @@ import axios from "axios";
 import HapusFeedback from "./components/HapusFeedback";
 import { toast } from "sonner";
 import TableView from "@/components/dashboard/table-view";
+import { Button } from "@/components/ui/button";
+import { ArrowUpDown } from "lucide-react";
 
 const PageFeedback = () => {
 	const [dataUser, setDataUser] = React.useState([]);
 
 	const columns = [
 		{
-			accessorKey: "rating",
-			header: "Rating",
+			accessorKey: "nama",
+			header: "Nama",
 			cell: ({ row }) => (
-				<div className="capitalize">{row.getValue("rating")}</div>
+				<div className="capitalize">
+					{row.getValue("nama") ? row.getValue("nama") : "Tidak Ada Nama"}
+				</div>
 			),
 		},
 		{
-			accessorKey: "deskripsi",
-			header: "Deskripsi",
+			accessorKey: "nomor_hp",
+			header: "No.Telepon",
 			cell: ({ row }) => (
-				<div className="capitalize">{row.getValue("deskripsi")}</div>
+				<div className="capitalize">
+					{row.getValue("nomor_hp")
+						? row.getValue("nomor_hp")
+						: "Tidak Ada Nomor"}
+				</div>
+			),
+		},
+		{
+			accessorKey: "rating_menu",
+			header: "Rating Menu",
+			header: ({ column }) => {
+				return (
+					<Button
+						variant="ghost"
+						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+					>
+						Kategori
+						<ArrowUpDown className="ml-2 h-4 w-4" />
+					</Button>
+				);
+			},
+			cell: ({ row }) => (
+				<div className="capitalize">
+					{row.getValue("rating_menu")
+						? row.getValue("rating_menu")
+						: "Tidak ada rating"}
+				</div>
+			),
+		},
+		{
+			accessorKey: "rating_pelayanan",
+			header: ({ column }) => {
+				return (
+					<Button
+						variant="ghost"
+						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+					>
+						Rating Pelayanan
+						<ArrowUpDown className="ml-2 h-4 w-4" />
+					</Button>
+				);
+			},
+			cell: ({ row }) => (
+				<div className="capitalize">
+					{row.getValue("rating_pelayanan")
+						? row.getValue("rating_pelayanan")
+						: "Tidak ada rating"}
+				</div>
+			),
+		},
+		{
+			accessorKey: "rating_restoran",
+			header: ({ column }) => {
+				return (
+					<Button
+						variant="ghost"
+						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+					>
+						Rating Restoran
+						<ArrowUpDown className="ml-2 h-4 w-4" />
+					</Button>
+				);
+			},
+			cell: ({ row }) => (
+				<div className="capitalize text-center">
+					{row.getValue("rating_restoran")
+						? row.getValue("rating_restoran")
+						: "Tidak ada rating"}
+				</div>
+			),
+		},
+		{
+			accessorKey: "saran",
+			header: "Saran",
+			cell: ({ row }) => (
+				<div className="capitalize">{row.getValue("saran")}</div>
+			),
+		},
+		{
+			accessorKey: "kritik",
+			header: "Kritik",
+			cell: ({ row }) => (
+				<div className="capitalize">{row.getValue("kritik")}</div>
 			),
 		},
 		{
@@ -63,7 +149,7 @@ const PageFeedback = () => {
 				data={dataUser}
 				fetchData={fetchDataFeedback}
 				title="Dashboard Feedback"
-				search="deskripsi"
+				search="nama"
 			/>
 		</>
 	);

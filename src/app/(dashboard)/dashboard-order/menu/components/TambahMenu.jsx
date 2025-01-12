@@ -27,10 +27,11 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import { PlusCircle } from "lucide-react";
-import { useState, useEffect, useMemo } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import Cookies from "js-cookie";
 
 const FormSchema = z.object({
 	nama_menu: z.string().nonempty("Nama harus diisi."),
@@ -40,25 +41,9 @@ const FormSchema = z.object({
 	harga: z.any(),
 });
 
-const TambahMenu = ({ fetchDataMenu }) => {
+const TambahMenu = ({ fetchDataMenu, dataKategori }) => {
 	const [openTambah, setOpenTambah] = useState(false);
-	const [dataKategori, setDataKategori] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
-	
-	useEffect(() => {
-		const fetchDataKategori = async () => {
-			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/kategori`,
-				{
-					cache: "force-cache",
-				}
-			);
-			const data = await response.json();
-			setDataKategori(data.data);
-		};
-
-		fetchDataKategori();
-	}, []);
 
 	const form = useForm({
 		resolver: zodResolver(FormSchema),
@@ -84,6 +69,9 @@ const TambahMenu = ({ fetchDataMenu }) => {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/menu`, {
 				method: "POST",
 				body: formData,
+				headers: {
+					Authorization: `Bearer ${Cookies.get("auth_session")}`,
+				},
 			});
 
 			if (response.status === 201) {
@@ -216,7 +204,11 @@ const TambahMenu = ({ fetchDataMenu }) => {
 							/>
 						</div>
 						<DialogFooter>
-							<Button type="submit" className="w-full mt-2" disabled={isLoading}>
+							<Button
+								type="submit"
+								className="w-full mt-2"
+								disabled={isLoading}
+							>
 								{isLoading ? "Loading..." : "Tambah"}
 							</Button>
 						</DialogFooter>

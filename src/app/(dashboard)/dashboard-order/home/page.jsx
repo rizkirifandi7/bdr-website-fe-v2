@@ -5,6 +5,10 @@ import { ChartInfo } from "./components/ChartInfo";
 import { BarInfo } from "./components/BarInfo";
 import { formatRupiah } from "@/lib/formatRupiah";
 import DashboardCard from "./components/DashboardCard";
+import Cookies from "js-cookie";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { HiOutlineDocumentReport } from "react-icons/hi";
 
 const PageHomeDashboard = () => {
 	const [data, setData] = React.useState({
@@ -82,8 +86,16 @@ const PageHomeDashboard = () => {
 			setError(null);
 			try {
 				const [pesananResponse, menuResponse] = await Promise.all([
-					fetch(`${process.env.NEXT_PUBLIC_API_URL}/pesanan`),
-					fetch(`${process.env.NEXT_PUBLIC_API_URL}/menu`),
+					fetch(`${process.env.NEXT_PUBLIC_API_URL}/pesanan/user`, {
+						headers: {
+							Authorization: `Bearer ${Cookies.get("auth_session")}`,
+						},
+					}),
+					fetch(`${process.env.NEXT_PUBLIC_API_URL}/menu/user`, {
+						headers: {
+							Authorization: `Bearer ${Cookies.get("auth_session")}`,
+						},
+					}),
 				]);
 
 				if (!pesananResponse.ok || !menuResponse.ok) {
@@ -93,11 +105,15 @@ const PageHomeDashboard = () => {
 				const pesananData = await pesananResponse.json();
 				const menuData = await menuResponse.json();
 
+				const completedOrders = pesananData.data.filter(
+					(order) => order.status === "completed"
+				);
+
 				setData({
-					infoDataPesanan: pesananData.data || [],
+					infoDataPesanan: completedOrders || [],
 					menuData: menuData.data || [],
 				});
-				calculatePercentageChange(pesananData.data || []);
+				calculatePercentageChange(completedOrders || []);
 			} catch (err) {
 				setError(err.message);
 			} finally {
@@ -118,7 +134,15 @@ const PageHomeDashboard = () => {
 
 	return (
 		<>
-			<h1 className="font-bold text-2xl">Dashboard</h1>
+			<div className="flex justify-between items-center mb-4">
+				<h1 className="font-bold text-2xl">Dashboard Laporan Penjualan</h1>
+				<Link href="/dashboard-order/home/laporan-penjualan">
+					<Button className="w-fit">
+						<HiOutlineDocumentReport />
+						Unduh Laporan Penjualan
+					</Button>
+				</Link>
+			</div>
 			<div className="grid auto-rows-min gap-4 md:grid-cols-4">
 				<DashboardCard
 					title="Order"

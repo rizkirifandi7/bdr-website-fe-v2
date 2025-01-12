@@ -72,7 +72,12 @@ const PageUser = () => {
 			toast.error("Error fetching data user");
 			return;
 		}
-		setDataUser(response.data.data);
+
+		const filterMitra = response.data.data.filter(
+			(item) => item.role === "mitra"
+		);
+
+		setDataUser(filterMitra);
 	}, []);
 
 	React.useEffect(() => {
@@ -86,7 +91,7 @@ const PageUser = () => {
 				data={dataUser}
 				fetchData={fetchDataUser}
 				TambahComponent={() => <TambahUser fetchDataUser={fetchDataUser} />}
-				title="Dashboard User"
+				title="Dashboard Akun Mitra"
 				search="nama"
 			/>
 		</>

@@ -5,7 +5,7 @@ const OrderPaymentMethod = ({ tipePayment, handlePaymentChange }) => {
 	return (
 		<div className="bg-white">
 			<div className="p-4 border-b">
-				<h1 className="font-semibold text-base mb-2">Payment Method</h1>
+				<h1 className="font-semibold text-base mb-2">Metode Pembayaran</h1>
 				<RadioGroup value={tipePayment} onValueChange={handlePaymentChange}>
 					<div className="flex justify-between items-center hover:bg-slate-100 rounded-lg py-0.5 w-full">
 						<label

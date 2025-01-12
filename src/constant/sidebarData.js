@@ -1,24 +1,45 @@
-const { User, LucideMenuSquare } = require("lucide-react");
+import { FaRegUser } from "react-icons/fa";
+import { FiHome, FiShoppingBag } from "react-icons/fi";
+import { TbReportAnalytics } from "react-icons/tb";
 const { BiFoodMenu } = require("react-icons/bi");
-const { LuChefHat } = require("react-icons/lu");
-const { MdOutlineSpaceDashboard, MdOutlineNoteAlt } = require("react-icons/md");
+const { LuChefHat, LuSquareMenu } = require("react-icons/lu");
+const {
+	MdOutlineSpaceDashboard,
+	MdOutlineNoteAlt,
+	MdOutlineFastfood,
+} = require("react-icons/md");
 
 export const OrderNavData = {
 	navMain: [
 		{
-			title: "Kelola Menu",
+			title: "Kelola Dashboard",
 			url: "#",
 			items: [
 				{
 					title: "Dashboard",
 					url: "/dashboard-order/home",
-					icon: <MdOutlineSpaceDashboard />,
+					icon: <FiHome />,
 				},
-				{ title: "Menu", url: "/dashboard-order/menu", icon: <BiFoodMenu /> },
+			],
+		},
+		{
+			title: "Kelola Menu",
+			url: "#",
+			items: [
+				{
+					title: "Kelola Menu",
+					url: "/dashboard-order/menu",
+					icon: <BiFoodMenu />,
+				},
 				{
 					title: "Kategori Menu",
 					url: "/dashboard-order/kategori-menu",
-					icon: <LucideMenuSquare />,
+					icon: <LuSquareMenu />,
+				},
+				{
+					title: "Beli Bahan Baku",
+					url: "/dashboard-order/order-bahan",
+					icon: <FiShoppingBag />,
 				},
 			],
 		},
@@ -29,10 +50,10 @@ export const OrderNavData = {
 				{
 					title: "Order Menu",
 					url: "/dashboard-order/order-menu",
-					icon: <MdOutlineNoteAlt />,
+					icon: <MdOutlineFastfood />,
 				},
 				{
-					title: "Pesanan",
+					title: "List Pesanan",
 					url: "/dashboard-order/pesanan",
 					icon: <MdOutlineNoteAlt />,
 				},
@@ -40,17 +61,6 @@ export const OrderNavData = {
 					title: "Manajemen Pesanan",
 					url: "/dashboard-order/kitchen-list",
 					icon: <LuChefHat />,
-				},
-			],
-		},
-		{
-			title: "Kelola User",
-			url: "#",
-			items: [
-				{
-					title: "User",
-					url: "/dashboard-order/user",
-					icon: <User />,
 				},
 			],
 		},
@@ -68,16 +78,53 @@ export const HomeNavData = {
 					url: "/dashboard-home/reservasi",
 					icon: <MdOutlineSpaceDashboard />,
 				},
-				{ title: "Menu", url: "/dashboard-home/menu", icon: <BiFoodMenu /> },
 				{
-					title: "Menu Populer",
-					url: "/dashboard-home/menu-populer",
+					title: "Kategori Menu",
+					url: "/dashboard-home/kategori-menu",
 					icon: <BiFoodMenu />,
 				},
+				{ title: "Menu", url: "/dashboard-home/menu", icon: <BiFoodMenu /> },
 				{
 					title: "Feedback",
 					url: "/dashboard-home/feedback",
 					icon: <MdOutlineSpaceDashboard />,
+				},
+			],
+		},
+	],
+};
+
+export const SuperAdminNavData = {
+	navMain: [
+		{
+			title: "Kelola Bahan Baku",
+			url: "#",
+			items: [
+				{
+					title: "Bahan Baku",
+					url: "/dashboard-superadmin/bahan-baku",
+					icon: <MdOutlineSpaceDashboard />,
+				},
+				{
+					title: "Pesanan Bahan Baku",
+					url: "/dashboard-superadmin/pesanan-bahan",
+					icon: <BiFoodMenu />,
+				},
+			],
+		},
+		{
+			title: "Kelola Mitra",
+			url: "#",
+			items: [
+				{
+					title: "Laporan Penjualan",
+					url: "/dashboard-superadmin/laporan-penjualan",
+					icon: <BiFoodMenu />,
+				},
+				{
+					title: "Akun Mitra",
+					url: "/dashboard-superadmin/akun-mitra",
+					icon: <FaRegUser />,
 				},
 			],
 		},

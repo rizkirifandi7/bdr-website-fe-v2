@@ -33,7 +33,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { MdOutlineEdit } from "react-icons/md";
-
+import Cookies from "js-cookie";
 
 const FormSchema = z.object({
 	nama_menu: z.string().nonempty("Nama harus diisi."),
@@ -50,7 +50,14 @@ const UpdateMenu = ({ fetchDataMenu, id, rowData }) => {
 	const [isLoading, setIsLoading] = useState(false);
 
 	const fetchDataKategori = useCallback(async () => {
-		const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/kategori`);
+		const response = await fetch(
+			`${process.env.NEXT_PUBLIC_API_URL}/kategori/user`,
+			{
+				headers: {
+					Authorization: `Bearer ${Cookies.get("auth_session")}`,
+				},
+			}
+		);
 		const data = await response.json();
 		setDataKategori(data.data);
 	}, []);
@@ -87,6 +94,9 @@ const UpdateMenu = ({ fetchDataMenu, id, rowData }) => {
 				{
 					method: "PUT",
 					body: formData,
+					headers: {
+						Authorization: `Bearer ${Cookies.get("auth_session")}`,
+					},
 				}
 			);
 
@@ -247,7 +257,11 @@ const UpdateMenu = ({ fetchDataMenu, id, rowData }) => {
 							/>
 						</div>
 						<DialogFooter>
-							<Button type="submit" className="w-full mt-2" disabled={isLoading}>
+							<Button
+								type="submit"
+								className="w-full mt-2"
+								disabled={isLoading}
+							>
 								{isLoading ? "Loading..." : "Update"}
 							</Button>
 						</DialogFooter>

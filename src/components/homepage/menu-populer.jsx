@@ -18,7 +18,11 @@ const MenuPopuler = () => {
 		try {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/menu`);
 			const data = await response.json();
-			setMenuItems(data.data);
+
+			const filterMenu = data.data.filter(
+				(item) => item.ispopuler === "populer"
+			);
+			setMenuItems(filterMenu);
 		} catch (error) {
 			console.error("Error fetching menu items:", error);
 		}
@@ -64,7 +68,6 @@ const MenuPopuler = () => {
 														className="w-auto h-auto bg-center bg-no-repeat bg-cover rounded-md"
 														width={200}
 														height={200}
-														loading="lazy"
 													/>
 												</div>
 												<div className="p-4">
