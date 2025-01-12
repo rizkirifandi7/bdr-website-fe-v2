@@ -14,7 +14,6 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import {
 	Select,
 	SelectContent,
@@ -22,6 +21,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import axios from "axios";
@@ -33,6 +33,7 @@ import { z } from "zod";
 
 const FormSchema = z.object({
 	status: z.string().nonempty("Status harus diisi."),
+	feedback: z.any(),
 });
 
 const UpdateBahanBaku = ({ fetchData, rowData, id }) => {
@@ -43,6 +44,7 @@ const UpdateBahanBaku = ({ fetchData, rowData, id }) => {
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
 			status: rowData.status,
+			feedback: rowData.feedback,
 		},
 	});
 
@@ -51,6 +53,7 @@ const UpdateBahanBaku = ({ fetchData, rowData, id }) => {
 		try {
 			const formData = new FormData();
 			formData.append("status", data.status);
+			formData.append("feedback", data.feedback);
 
 			const response = await axios.put(
 				`${process.env.NEXT_PUBLIC_API_URL}/order-bahan/${id}`,
@@ -108,6 +111,23 @@ const UpdateBahanBaku = ({ fetchData, rowData, id }) => {
 												<SelectItem value="cancel">Cancel</SelectItem>
 											</SelectContent>
 										</Select>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="feedback"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Feedback</FormLabel>
+									<FormControl>
+										<Textarea
+											className="shadow-none"
+											placeholder="masukkan informasi cancel..."
+											{...field}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
