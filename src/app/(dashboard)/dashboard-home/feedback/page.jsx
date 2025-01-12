@@ -41,7 +41,7 @@ const PageFeedback = () => {
 						variant="ghost"
 						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
 					>
-						Kategori
+						Rating Menu
 						<ArrowUpDown className="ml-2 h-4 w-4" />
 					</Button>
 				);

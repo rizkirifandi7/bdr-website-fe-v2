@@ -132,7 +132,11 @@ const PageLaporanPenjualan = () => {
 							onChange={(e) => setEndDate(e.target.value)}
 						/>
 					</div>
-					<Button onClick={exportJsonToExcel} className="w-fit">
+					<Button
+						disabled={!startDate || !endDate}
+						onClick={exportJsonToExcel}
+						className="w-fit"
+					>
 						Unduh Laporan Penjualan
 					</Button>
 				</Card>

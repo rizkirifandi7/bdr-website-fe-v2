@@ -188,7 +188,7 @@ const TambahUser = ({ fetchDataUser }) => {
 							name="pin"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Retype Password</FormLabel>
+									<FormLabel>Pin</FormLabel>
 									<FormControl>
 										<Input
 											className="shadow-none"
@@ -216,8 +216,8 @@ const TambahUser = ({ fetchDataUser }) => {
 												<SelectValue placeholder="role" />
 											</SelectTrigger>
 											<SelectContent>
-												<SelectItem value="adminhome">Adminhome</SelectItem>
-												<SelectItem value="admin">Admin</SelectItem>
+												{/* <SelectItem value="adminhome">Adminhome</SelectItem> */}
+												{/* <SelectItem value="admin">Admin</SelectItem> */}
 												<SelectItem value="mitra">Mitra</SelectItem>
 												<SelectItem value="pegawai">Pegawai</SelectItem>
 											</SelectContent>
