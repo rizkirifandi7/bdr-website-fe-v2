@@ -67,6 +67,13 @@ const PageOrderBahan = () => {
 			},
 		},
 		{
+			accessorKey: "feedback",
+			header: "Feedback",
+			cell: ({ row }) => (
+				<div className="capitalize">{row.getValue("feedback") || "-"}</div>
+			),
+		},
+		{
 			id: "actions",
 			enableHiding: false,
 			cell: ({ row }) => {
