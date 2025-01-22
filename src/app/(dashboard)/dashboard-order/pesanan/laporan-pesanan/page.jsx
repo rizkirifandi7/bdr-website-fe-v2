@@ -34,7 +34,6 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 import { toast } from "sonner";
 import { z } from "zod";
 import * as XLSX from "xlsx";
-import { useParams } from "next/navigation";
 
 // Form schema
 const FormSchema = z.object({
@@ -47,7 +46,6 @@ const FormSchema = z.object({
 });
 
 const PageLaporanPesanan = () => {
-	const { id } = useParams();
 	const [data, setData] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -70,7 +68,12 @@ const PageLaporanPesanan = () => {
 
 			try {
 				const response = await axios.get(
-					`${process.env.NEXT_PUBLIC_API_URL}/pesanan/user/${id}`
+					`${process.env.NEXT_PUBLIC_API_URL}/pesanan/user`,
+					{
+						headers: {
+							Authorization: `Bearer ${Cookies.get("auth_session")}`,
+						},
+					}
 				);
 				setData(response.data.data);
 			} catch (error) {
@@ -187,7 +190,7 @@ const PageLaporanPesanan = () => {
 
 	return (
 		<>
-			<Link href="/dashboard-superadmin/laporan-penjualan">
+			<Link href="/dashboard-order/pesanan">
 				<Button variant="ghost" className="mb-4">
 					<FaArrowLeftLong />
 					Kembali

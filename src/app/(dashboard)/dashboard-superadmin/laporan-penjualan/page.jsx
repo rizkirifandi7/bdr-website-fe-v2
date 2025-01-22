@@ -11,8 +11,6 @@ import { Eye } from "lucide-react";
 const PageLaporanPenjualanMitra = () => {
 	const [data, setData] = React.useState([]);
 
-	console.log(data);
-
 	const fetchData = React.useCallback(async () => {
 		try {
 			const response = await axios.get(

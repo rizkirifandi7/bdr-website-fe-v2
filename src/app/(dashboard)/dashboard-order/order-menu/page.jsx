@@ -132,103 +132,109 @@ const PageOrderMenu = () => {
 	);
 
 	return (
-		<div className="flex flex-col md:flex-row gap-4">
-			{/* Menu Section */}
-			<div className="flex flex-col gap-4 w-full">
-				<h1 className="text-2xl font-semibold">
-					{selectedCategory ? selectedCategory.nama_kategori : "Semua Menu"}
-				</h1>
+		<section>
+			<h1 className="text-2xl font-bold border w-full rounded-md p-2 text-center mb-4">
+				Order Menu
+			</h1>
+			<div className="flex flex-col md:flex-row gap-4">
+				{/* Menu Section */}
+				<Card className="flex flex-col gap-4 w-full rounded-md p-4">
+					<h1 className="text-2xl font-semibold">
+						{selectedCategory ? selectedCategory.nama_kategori : "Semua Menu"}
+					</h1>
 
-				<div className="flex items-center flex-wrap gap-4">
-					{dataFilterMenu.map((data) => (
-						<FilterMenu
-							key={data.id}
-							namafilter={data.nama_kategori}
-							onClick={() => setSelectedCategory(data)}
-						/>
-					))}
-				</div>
-
-				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-					{filteredMenus.map((data) => {
-						const cartItem = cart.find((item) => item.id === data.id);
-						return (
-							<CardMenu
+					<div className="flex items-center flex-wrap gap-4">
+						{dataFilterMenu.map((data) => (
+							<FilterMenu
 								key={data.id}
-								data={data}
-								cartItem={cartItem}
-								addToCart={addToCart}
-								removeFromCart={removeFromCart}
+								namafilter={data.nama_kategori}
+								active={selectedCategory?.id === data.id}
+								onClick={() => setSelectedCategory(data)}
 							/>
-						);
-					})}
-				</div>
-				{filteredMenus.length === 0 && (
-					<div className="flex flex-col h-[500px] justify-center items-center w-full">
-						<Soup size={40} />
-						<h1 className="text-center text-2xl font-semibold">
-							Tidak ada menu
-						</h1>
+						))}
 					</div>
-				)}
-			</div>
 
-			{/* Order Section */}
-			<Card className="flex flex-col w-full md:w-[45%] border rounded-md h-full">
-				<div className="border-b p-4 space-y-2">
-					<h1 className="text-base font-semibold">Customer Info</h1>
-					<div className="flex gap-2">
-						<div className="w-full">
-							<Label className="text-sm">Nama</Label>
-							<Input
-								type="text"
-								placeholder="Nama"
-								value={name}
-								onChange={(e) => setName(e.target.value)}
-								required
-							/>
-						</div>
-						<div className="w-full">
-							<Label className="text-sm">Tipe Order</Label>
-							<Select value={typeOrder} onValueChange={setTypeOrder} required>
-								<SelectTrigger>
-									<SelectValue placeholder="Tipe Order" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value="Dine In">Dine in</SelectItem>
-									<SelectItem value="Take Away">Take Away</SelectItem>
-								</SelectContent>
-							</Select>
-						</div>
+					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 border-t pt-4">
+						{filteredMenus.map((data) => {
+							const cartItem = cart.find((item) => item.id === data.id);
+							return (
+								<CardMenu
+									key={data.id}
+									data={data}
+									cartItem={cartItem}
+									addToCart={addToCart}
+									removeFromCart={removeFromCart}
+								/>
+							);
+						})}
 					</div>
-					<Textarea
-						value={note}
-						onChange={(e) => setNote(e.target.value)}
-						className="w-full h-[80px] resize-none"
-						placeholder="Catatan..."
+					{filteredMenus.length === 0 && (
+						<div className="flex flex-col h-[500px] justify-center items-center w-full">
+							<Soup size={40} />
+							<h1 className="text-center text-2xl font-semibold">
+								Tidak ada menu
+							</h1>
+						</div>
+					)}
+				</Card>
+
+				{/* Order Section */}
+				<Card className="flex flex-col w-full md:w-[45%] border rounded-md h-full">
+					<div className="border-b p-4 space-y-2">
+						<h1 className="text-base font-semibold">Customer Info</h1>
+						<div className="flex gap-2">
+							<div className="w-full">
+								<Label className="text-sm">Nama</Label>
+								<Input
+									type="text"
+									placeholder="Nama"
+									value={name}
+									onChange={(e) => setName(e.target.value)}
+									required
+								/>
+							</div>
+							<div className="w-full">
+								<Label className="text-sm">Tipe Order</Label>
+								<Select value={typeOrder} onValueChange={setTypeOrder} required>
+									<SelectTrigger>
+										<SelectValue placeholder="Tipe Order" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value="Dine In">Dine in</SelectItem>
+										<SelectItem value="Take Away">Take Away</SelectItem>
+									</SelectContent>
+								</Select>
+							</div>
+						</div>
+						<Textarea
+							value={note}
+							onChange={(e) => setNote(e.target.value)}
+							className="w-full h-[80px] resize-none"
+							placeholder="Catatan..."
+						/>
+					</div>
+
+					<OrderItem cart={cart} totalQuantity={totalQuantity} />
+
+					<OrderPaymentMethod
+						tipePayment={tipePayment}
+						handlePaymentChange={setTipePayment}
 					/>
-				</div>
 
-				<OrderItem cart={cart} totalQuantity={totalQuantity} />
+					<OrderSummary totalPrice={getTotalPrice} tax={0} discount={0} />
 
-				<OrderPaymentMethod
-					tipePayment={tipePayment}
-					handlePaymentChange={setTipePayment}
-				/>
-
-				<OrderSummary totalPrice={getTotalPrice} tax={0} discount={0} />
-
-				<div className="p-4">
-					<Button
-						className="w-full py-6 rounded-lg bg-orange-500 text-white hover:bg-slate-800"
-						onClick={handlePlaceOrder}
-						disabled={isLoading}
-					>
-						{isLoading ? "Loading..." : "Place Order"}
-					</Button>
-				</div>
-			</Card>
-		</div>
+					<div className="p-4">
+						<Button
+							className="w-full py-6 rounded-lg bg-blue-500 text-white hover:bg-slate-800"
+							onClick={handlePlaceOrder}
+							disabled={isLoading}
+						>
+							{isLoading ? "Loading..." : "Place Order"}
+						</Button>
+					</div>
+				</Card>
+			</div>
+		</section>
 	);
 };
 

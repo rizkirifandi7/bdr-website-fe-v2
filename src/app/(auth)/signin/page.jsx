@@ -36,7 +36,7 @@ const FormSchema = z.object({
 	password: z.string().trim().min(1, "Password is required."),
 });
 
-const PageLogin = () => {
+const PageSignin = () => {
 	const router = useRouter();
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -70,14 +70,10 @@ const PageLogin = () => {
 				} = response.data;
 
 				await setCookie("auth_session", token);
-				toast.success("Login successful.");
 
-				if (role === "mitra") {
-					router.push("/dashboard-order/home");
-				} else if (role === "admin") {
-					router.push("/dashboard-superadmin/bahan-baku");
-				} else if (role === "adminhome") {
+				if (role === "adminhome") {
 					router.push("/dashboard-home/menu");
+					toast.success("Login successful.");
 				} else {
 					toast.error("You do not have access.");
 				}
@@ -127,7 +123,7 @@ const PageLogin = () => {
 												{...field}
 												type="text"
 												disabled={isLoading}
-                        className="w-full py-6"
+												className="w-full py-6"
 											/>
 										</FormControl>
 										<FormMessage />
@@ -146,7 +142,7 @@ const PageLogin = () => {
 												{...field}
 												type="password"
 												disabled={isLoading}
-                        className="w-full py-6"
+												className="w-full py-6"
 											/>
 										</FormControl>
 										<FormMessage />
@@ -168,4 +164,4 @@ const PageLogin = () => {
 	);
 };
 
-export default PageLogin;
+export default PageSignin;

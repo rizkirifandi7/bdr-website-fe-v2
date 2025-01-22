@@ -110,7 +110,7 @@ const PageOrderBahan = () => {
 				data={data}
 				TambahComponent={() => (
 					<Link href="/dashboard-order/order-bahan/bahan-baku">
-						<Button>
+						<Button className="bg-blue-500">
 							<PlusCircle />
 							Order Bahan Baku
 						</Button>

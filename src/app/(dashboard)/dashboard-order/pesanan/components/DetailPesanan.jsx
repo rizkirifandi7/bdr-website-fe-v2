@@ -16,8 +16,6 @@ import React from "react";
 const DetailPesanan = ({ rowData, id }) => {
 	const [openDetail, setOpenDetail] = React.useState(false);
 
-	console.log(rowData);
-
 	return (
 		<>
 			<Dialog

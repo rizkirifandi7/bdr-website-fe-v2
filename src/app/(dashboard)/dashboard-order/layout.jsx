@@ -20,7 +20,12 @@ const LayoutAdmin = ({ children }) => {
 		<>
 			<Toaster position="top-center" />
 			<SidebarProvider>
-				<SidebarDashboard data={OrderNavData} header={<DashboardHeaderOrder />}>
+				<SidebarDashboard
+					data={OrderNavData}
+					header={<DashboardHeaderOrder />}
+					judul={"Demiehan"}
+					logo={"/logobrand.png"}
+				>
 					<div className="p-4">
 						<CartProvider>
 							<CartBahanBakuProvider>{children}</CartBahanBakuProvider>

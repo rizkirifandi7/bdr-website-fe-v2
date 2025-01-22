@@ -50,27 +50,27 @@ const Footer = () => {
 						</FooterSection>
 						<FooterSection title="Ikuti Kami">
 							<Link
-								href="facebook.com/baksodonoreborn"
+								href="https://facebook.com/baksodonoreborn"
 								className="flex items-center gap-2"
 							>
 								<CiFacebook /> Facebook
 							</Link>
 							<Link
-								href="instagram.com/baksodonoreborn/"
+								href="https://instagram.com/baksodonoreborn/"
 								className="flex items-center gap-2"
 							>
 								<CiInstagram /> Instagram
 							</Link>
 							<Link
 								className="flex items-center gap-2"
-								href="youtube.com/channel/UCR7Garv3A8D2ED-kVix2nFg"
+								href="https://youtube.com/channel/UCR7Garv3A8D2ED-kVix2nFg"
 							>
 								<CiYoutube />
 								Youtube
 							</Link>
 							<Link
 								className="flex items-center gap-2"
-								href="www.tiktok.com/@baksodonoreborn"
+								href="https://www.tiktok.com/@baksodonoreborn"
 							>
 								<PiTiktokLogo />
 								Tiktok

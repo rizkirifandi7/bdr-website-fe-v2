@@ -136,10 +136,10 @@ const PageHomeDashboard = () => {
 		<>
 			<div className="flex justify-between items-center mb-4">
 				<h1 className="font-bold text-2xl">Dashboard Laporan Penjualan</h1>
-				<Link href="/dashboard-order/home/laporan-penjualan">
-					<Button className="w-fit">
+				<Link href="/dashboard-order/pesanan/laporan-pesanan">
+					<Button className="w-fit bg-blue-500">
 						<HiOutlineDocumentReport />
-						Unduh Laporan Penjualan
+						Unduh Laporan Pesanan
 					</Button>
 				</Link>
 			</div>

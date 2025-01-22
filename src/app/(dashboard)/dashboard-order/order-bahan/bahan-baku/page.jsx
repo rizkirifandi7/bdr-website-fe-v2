@@ -105,7 +105,7 @@ const PageBahanBaku = () => {
 					)}
 					<DetailTotal getCartTotal={getCartTotal} />
 					<Button
-						className="w-full mt-4 py-6 bg-headingText"
+						className="w-full mt-4 py-6 bg-blue-500"
 						onClick={() => orderBahanBaku()}
 						disabled={loading}
 					>

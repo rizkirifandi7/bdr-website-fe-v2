@@ -117,7 +117,7 @@ export function BarInfo({ orders }) {
 						<Bar
 							dataKey="jumlah"
 							layout="vertical"
-							fill="hsl(var(--chart-1))"
+							fill="hsl(var(--chart-6))"
 							radius={4}
 						>
 							<LabelList

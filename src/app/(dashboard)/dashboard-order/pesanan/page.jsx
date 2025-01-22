@@ -17,6 +17,8 @@ import { ArrowUpDown } from "lucide-react";
 import TableView from "@/components/dashboard/table-view";
 import { formatDateTime } from "@/lib/formatDate";
 import Cookies from "js-cookie";
+import Link from "next/link";
+import { HiOutlineDocumentReport } from "react-icons/hi";
 
 const PagePesanan = () => {
 	const [dataUser, setDataUser] = React.useState([]);
@@ -123,6 +125,14 @@ const PagePesanan = () => {
 			columns={columns}
 			data={dataUser}
 			fetchData={fetchDataPesanan}
+			TambahComponent={() => (
+				<Link href="/dashboard-order/pesanan/laporan-pesanan">
+					<Button className="bg-blue-500">
+						<HiOutlineDocumentReport />
+						Unduh Laporan Pesanan
+					</Button>
+				</Link>
+			)}
 			title="Dashboard Pesanan"
 			search="item_pesanan"
 		/>

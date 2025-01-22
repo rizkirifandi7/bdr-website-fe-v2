@@ -11,7 +11,7 @@ const CardMenu = ({ addToCart, removeFromCart, data, cartItem }) => {
 	return (
 		<Card
 			key={data.id}
-			className={`flex flex-col rounded-md h-[300px] ${
+			className={`flex flex-col rounded-md h-[300px] shadow-none ${
 				cartItem ? "border-orange-500" : ""
 			}`}
 		>

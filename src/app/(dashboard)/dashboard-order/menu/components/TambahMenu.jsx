@@ -91,7 +91,7 @@ const TambahMenu = ({ fetchDataMenu, dataKategori }) => {
 	return (
 		<Dialog open={openTambah} onOpenChange={setOpenTambah}>
 			<DialogTrigger asChild>
-				<Button>
+				<Button className="bg-blue-500">
 					<PlusCircle />
 					Tambah Menu
 				</Button>

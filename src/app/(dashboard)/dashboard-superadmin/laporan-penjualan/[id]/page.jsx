@@ -128,7 +128,7 @@ const PageLaporanPenjualanMitra = () => {
 
 	return (
 		<>
-			<div className="flex justify-between items-center mb-4">
+			<div className="flex justify-between items-center">
 				<h1 className="font-bold text-2xl">Dashboard Laporan Penjualan</h1>
 				<Link
 					href={`/dashboard-superadmin/laporan-penjualan/unduh-laporan/${id}`}

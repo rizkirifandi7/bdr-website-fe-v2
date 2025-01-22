@@ -11,6 +11,18 @@ import { ArrowUpDown } from "lucide-react";
 const PageFeedback = () => {
 	const [dataUser, setDataUser] = React.useState([]);
 
+	const generateStars = (rating) => {
+		const stars = [];
+		for (let i = 0; i < 5; i++) {
+			if (i < rating) {
+				stars.push(<span key={i}>&#9733;</span>); // Filled star
+			} else {
+				stars.push(<span key={i}>&#9734;</span>); // Empty star
+			}
+		}
+		return stars;
+	};
+
 	const columns = [
 		{
 			accessorKey: "nama",
@@ -49,7 +61,7 @@ const PageFeedback = () => {
 			cell: ({ row }) => (
 				<div className="capitalize">
 					{row.getValue("rating_menu")
-						? row.getValue("rating_menu")
+						? generateStars(row.getValue("rating_menu"))
 						: "Tidak ada rating"}
 				</div>
 			),
@@ -70,7 +82,7 @@ const PageFeedback = () => {
 			cell: ({ row }) => (
 				<div className="capitalize">
 					{row.getValue("rating_pelayanan")
-						? row.getValue("rating_pelayanan")
+						? generateStars(row.getValue("rating_pelayanan"))
 						: "Tidak ada rating"}
 				</div>
 			),
@@ -89,9 +101,9 @@ const PageFeedback = () => {
 				);
 			},
 			cell: ({ row }) => (
-				<div className="capitalize text-center">
+				<div className="capitalize">
 					{row.getValue("rating_restoran")
-						? row.getValue("rating_restoran")
+						? generateStars(row.getValue("rating_restoran"))
 						: "Tidak ada rating"}
 				</div>
 			),

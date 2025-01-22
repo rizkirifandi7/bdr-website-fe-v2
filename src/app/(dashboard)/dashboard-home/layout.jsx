@@ -20,6 +20,8 @@ const LayoutDashboardHome = ({ children }) => {
 			<SidebarProvider>
 				<SidebarDashboard
 					data={HomeNavData}
+					judul={"Bakso Dono Reborn"}
+					logo={"/logobdr.png"}
 					header={<SidebarDashboardHeader />}
 				>
 					<div className="flex flex-1 flex-col gap-4 p-4">{children}</div>

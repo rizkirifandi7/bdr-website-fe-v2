@@ -2,14 +2,14 @@ import React from "react";
 import { Toaster } from "sonner";
 import { SuperAdminNavData } from "@/constant/sidebarData";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import SidebarDashboardHeader from "@/components/dashboard/header-home";
 import SidebarDashboard from "@/components/dashboard/sidebar-dashboard";
+import DashboardHeaderOrder from "@/components/dashboard/header-order";
 
 export const metadata = {
-	title: "Dashboard Home | Bakso Dono Reborn",
-	description: "Bakso Dono Reborn",
+	title: "Dashboard Home | Demiehan",
+	description: "Demiehan",
 	icons: {
-		icon: "/favicon.ico",
+		icon: "/logobrand.png",
 	},
 };
 
@@ -20,7 +20,9 @@ const LayoutDashboardHome = ({ children }) => {
 			<SidebarProvider>
 				<SidebarDashboard
 					data={SuperAdminNavData}
-					header={<SidebarDashboardHeader />}
+					judul={"Demiehan"}
+					logo={"/logobrand.png"}
+					header={<DashboardHeaderOrder />}
 				>
 					<div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
 				</SidebarDashboard>

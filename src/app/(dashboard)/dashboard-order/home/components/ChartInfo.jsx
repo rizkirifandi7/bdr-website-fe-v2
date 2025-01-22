@@ -108,7 +108,7 @@ export function ChartInfo({ orders }) {
 						<Line
 							dataKey="jumlahPesanan"
 							type="natural"
-							stroke="hsl(var(--chart-1))"
+							stroke="hsl(var(--chart-6))"
 							strokeWidth={2}
 							dot={{
 								fill: "hsl(var(--chart-1))",
