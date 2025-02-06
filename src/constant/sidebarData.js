@@ -1,6 +1,5 @@
 import { FaRegUser } from "react-icons/fa";
 import { FiHome, FiShoppingBag } from "react-icons/fi";
-import { TbReportAnalytics } from "react-icons/tb";
 const { BiFoodMenu } = require("react-icons/bi");
 const { LuChefHat, LuSquareMenu } = require("react-icons/lu");
 const {

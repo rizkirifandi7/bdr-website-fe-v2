@@ -4,12 +4,7 @@ export function middleware(request) {
 	const token = request.cookies.get("auth_session");
 	const { pathname } = request.nextUrl;
 
-	if (
-		!token &&
-		(pathname.startsWith("/dashboard-order") ||
-			pathname.startsWith("/dashboard-home") ||
-			pathname.startsWith("/dashboard-superadmin"))
-	) {
+	if (!token && pathname.startsWith("/dashboard-home")) {
 		return NextResponse.redirect(new URL("/signin", request.url));
 	}
 
@@ -18,8 +13,6 @@ export function middleware(request) {
 
 export const config = {
 	matcher: [
-		"/dashboard-order/:path*",
 		"/dashboard-home/:path*",
-		"/dashboard-superadmin/:path*",
 	],
 };
