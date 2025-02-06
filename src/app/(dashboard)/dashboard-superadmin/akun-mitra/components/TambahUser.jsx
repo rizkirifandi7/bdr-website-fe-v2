@@ -60,6 +60,25 @@ const TambahUser = ({ fetchDataUser }) => {
 		},
 	});
 
+	const onSubmit = async (data) => {
+		try {
+			const formData = new FormData();
+			formData.append("nama", data.nama);
+
+			const response = await axios.post(
+				`http://localhost:8000/register`,
+				formData,
+				{
+					headers: {
+						"Content-Type": "application/json",
+					},
+				}
+			);
+
+
+		} catch (error) {}
+	};
+
 	const handleTambah = async (data) => {
 		try {
 			const formData = new FormData();
