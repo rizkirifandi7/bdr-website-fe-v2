@@ -1,3 +1,4 @@
+import { User2 } from "lucide-react";
 import { FaRegUser } from "react-icons/fa";
 import { FiHome, FiShoppingBag } from "react-icons/fi";
 const { BiFoodMenu } = require("react-icons/bi");
@@ -87,6 +88,17 @@ export const HomeNavData = {
 					title: "Feedback",
 					url: "/dashboard-home/feedback",
 					icon: <MdOutlineSpaceDashboard />,
+				},
+			],
+		},
+		{
+			title: "Kelola Profile",
+			url: "#",
+			items: [
+				{
+					title: "Profile",
+					url: "/dashboard-home/profile",
+					icon: <User2/>,
 				},
 			],
 		},
