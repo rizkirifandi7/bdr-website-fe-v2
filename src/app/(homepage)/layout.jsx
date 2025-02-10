@@ -24,7 +24,7 @@ export default function HomeRoot({ children }) {
 			<div className="fixed bottom-0 right-0 m-4">
 				<Button asChild size="icon" variant="outline">
 					<Link href={"https://wa.me/62895609977877"}>
-						<Image src={"/wa.ico"} width={32} height={32} alt="wa" />
+						<Image src={"/wa.png"} width={32} height={32} alt="wa" />
 					</Link>
 				</Button>
 			</div>
