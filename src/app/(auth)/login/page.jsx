@@ -68,7 +68,6 @@ const PageLogin = () => {
 			await setCookie("auth_session", token);
 
 			const routeMap = {
-				mitra: "/dashboard-order/home",
 				admin: "/dashboard-superadmin/bahan-baku",
 			};
 

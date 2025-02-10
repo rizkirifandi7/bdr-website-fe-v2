@@ -12,13 +12,16 @@ const Jumbotron = () => {
 						<h1 className="text-4xl md:text-7xl font-bold">
 							Bakso Dono Reborn
 						</h1>
-						<p className="text-sm md:text-base mt-4 text-center md:text-left md:w-[600px]">
-							Kami hadir untuk memanjakan anda dengan cita rasa autentik mie dan
-							bakso yang lezat! Di Bakso Dono Reborn, setiap mangkuk kami,
-							disiapkan dengan bahan-bahan segar dan resep istimewa. Nikmati
-							kelezatan mie yang kenyal dan bakso yang juicy dalam suasana
-							hangat dan ramah. Bergabunglah bersama kami dan rasakan kenikmatan
-							yang tak tertandingi di setiap suapan!
+						<p className="text-sm md:text-sm mt-4 text-center md:text-left md:w-[600px]">
+							Kami adalah tempat di mana setiap kelezatan dari kombinasi
+							bertemu. Di sini, kami bangga menyajikan mie dan bakso yang kami
+							produksi sendiri, menggunakan bahan-bahan segar dan berkualitas
+							tinggi. Setiap hari, tim kami bekerja dengan penuh dedikasi untuk
+							membuat mie yang kenyal dan bakso yang juicy, dengan resep yang
+							istimewa. Kami percaya bahwa cita rasa terbaik dimulai dari bahan
+							yang terbaik, sehingga kami selalu memilih bahan-bahan lokal yang
+							segar. Bergabunglah bersama kami di Bakso Dono Reborn, dan rasakan
+							perbedaan dari mie dan bakso yang diolah dengan sepenuh hati!
 						</p>
 
 						<div className="flex gap-4 mt-4 md:mt-10">
@@ -37,9 +40,9 @@ const Jumbotron = () => {
 						<Image
 							src="/hero.png"
 							alt="hero"
-							width={400}
-							height={400}
-							className="w-[300px] h-[300px] md:w-auto md:h-auto animate-spin-slow"
+							width={600}
+							height={600}
+							className="animate-spin-slow"
 						/>
 					</div>
 				</div>
