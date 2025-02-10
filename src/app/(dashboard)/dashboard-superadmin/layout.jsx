@@ -9,7 +9,7 @@ export const metadata = {
 	title: "Dashboard Home | Demiehan",
 	description: "Demiehan",
 	icons: {
-		icon: "/favicon.ico",
+		icon: "/logobrand.png",
 	},
 };
 
